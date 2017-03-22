@@ -48,48 +48,95 @@ body {
 }
 
 .rotate-90 {
+    -moz-transform: rotate(90deg);
     -ms-transform: rotate(90deg); /* IE 9 */
-    -webkit-transform: rotate(90deg); /* Chrome, Safari, Opera */
+    -webkit-transform: rotate(90deg);
     transform: rotate(90deg);
 }
 
 .rotate-180 {
+    -moz-transform: rotate(180deg);
     -ms-transform: rotate(180deg); /* IE 9 */
-    -webkit-transform: rotate(180deg); /* Chrome, Safari, Opera */
+    -webkit-transform: rotate(180deg);
     transform: rotate(180deg);
 }
 
 .rotate-270 {
+    -moz-transform: rotate(270deg);
     -ms-transform: rotate(270deg); /* IE 9 */
-    -webkit-transform: rotate(270deg); /* Chrome, Safari, Opera */
+    -webkit-transform: rotate(270deg);
     transform: rotate(270deg);
 }
 
 .spin-right {
     animation: spin-right 2s infinite linear;
-    -webkit-animation: spin-right 2s infinite linear
+    -webkit-animation: spin-right 2s infinite linear;
+    -moz-animation: spin-right 2s infinite linear;
 }
-@keyframes spin-right{
-    0%{-webkit-transform:rotate(0deg);transform:rotate(0deg)}
-    100%{-webkit-transform:rotate(359deg);transform:rotate(359deg)}
-}
-@-webkit-keyframes spin-right{
-    0% {-webkit-transform: rotate(0deg); transform: rotate(0deg)}
-    100%{-webkit-transform: rotate(359deg); transform: rotate(359deg)}
-}
+
+    @keyframes spin-right{
+        0% {
+            -moz-transform: rotate(0deg);
+            -ms-transform: rotate(0deg);
+            -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+        }
+        100% {
+            -moz-transform: rotate(359deg);
+            -ms-transform: rotate(359deg);
+            -webkit-transform: rotate(359deg);
+            transform: rotate(359deg);
+        }
+    }
+    @-webkit-keyframes spin-right{
+        0% {
+            -moz-transform: rotate(0deg);
+            -ms-transform: rotate(0deg);
+            -webkit-transform: rotate(0deg);
+            transform: rotate(0deg)
+        }
+        100% {
+            -ms-transform: rotate(359deg);
+            -moz-transform: rotate(359deg);
+            -webkit-transform: rotate(359deg);
+            transform: rotate(359deg)
+        }
+    }
 
 .spin-left {
     animation: spin-left 2s infinite linear;
-    -webkit-animation: spin-left 2s infinite linear
+    -webkit-animation: spin-left 2s infinite linear;
+    -moz-animation: spin-left 2s infinite linear;
 }
-@keyframes spin-left{
-    0%{-webkit-transform:rotate(0deg);transform:rotate(0deg)}
-    100%{-webkit-transform:rotate(-359deg);transform:rotate(-359deg)}
-}
-@-webkit-keyframes spin-left{
-    0% {-webkit-transform: rotate(0deg); transform: rotate(0deg)}
-    100%{-webkit-transform: rotate(-359deg); transform: rotate(-359deg)}
-}
+
+    @keyframes spin-left{
+        0% {
+            -moz-transform: rotate(0deg);
+            -ms-transform: rotate(0deg);
+            -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+        }
+        100% {
+            -moz-transform: rotate(-359deg);
+            -ms-transform: rotate(-359deg);
+            -webkit-transform: rotate(-359deg);
+            transform: rotate(-359deg);
+        }
+    }
+    @-webkit-keyframes spin-left{
+        0% {
+            -moz-transform: rotate(0deg);
+            -ms-transform: rotate(0deg);
+            -webkit-transform: rotate(0deg);
+            transform: rotate(0deg)
+        }
+        100% {
+            -moz-transform: rotate(-359deg);
+            -ms-transform: rotate(-359deg);
+            -webkit-transform: rotate(-359deg);
+            transform: rotate(-359deg)
+        }
+    }
 
 
 .cell-symbol {

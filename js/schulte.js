@@ -221,6 +221,7 @@ vueApp = new Vue({
         },
         execDialog: function (tabName) {
             this.changeDialogTab(tabName)
+            this.stats.stopTime = new Date();
             this.dialogShowed = true;
         },
         changeDialogTab: function (tabName) {

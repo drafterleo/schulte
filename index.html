@@ -8,12 +8,17 @@
     <link rel="stylesheet" href="css/schulte.css">
     <script src="js/vue.min.js"></script>
     <title>Document</title>
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+    </style>
 </head>
 <body>
     <div id="app" class="wrapper w3-container w3-padding-0 w3-margin-0"
          tabindex="-1"
          @keyup.esc="dialogShowed ? hideDialog() : execDialog('settings')"
-         v-focus>
+         v-focus v-cloak>
 
         <div v-for="r in gridRange" class="row" :style="{height: rowHeight}">
             <div v-for="c in gridRange" class="cell" :style="{width: colWidth}"

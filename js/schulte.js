@@ -1,5 +1,6 @@
 function Cell(number) {
     this.number = number;
+    this.symbol = number;
     this.cssClasses = {
         'rotate-90': false,
         'rotate-180': false,
@@ -26,8 +27,8 @@ var appData = {
     showHover: true,
     showHitResult: true,
     showTrace: true,
-    turnNumbers: false,
-    spinNumbers: false,
+    turnSymbols: false,
+    spinSymbols: false,
 
     rowHeight: '20%',
     colWidth: '20%',
@@ -73,10 +74,12 @@ vueApp = new Vue({
 
             this.startGame();
         },
-        spinNumbers: function (val) {
-            this.updateCellSpins();
-        }
-    },
+        spinSymbols: function (val) {
+            this.updateSymbolSpins();
+        },
+        turnSymbols: function (val) {
+            this.updateSymbolTurns();
+        }    },
     computed: {
         selectedCell: {
             get: function () {
@@ -107,7 +110,7 @@ vueApp = new Vue({
             this.clearIndexes();
             this.currNum = 1;
             this.makeCells(this.gridSize * this.gridSize);
-            this.updateCellSpins();
+            this.updateSymbolSpins();
             this.trace = [];
             this.shuffleCells(1000);
             //console.log('init game');
@@ -210,11 +213,25 @@ vueApp = new Vue({
                 this.gridSize = val;
             }
         },
-        updateCellSpins: function () {
+        updateSymbolSpins: function () {
             for (var i = 0; i < this.cells.length; i++) {
                 this.cells[i].cssClasses['spin-left'] = false;
                 this.cells[i].cssClasses['spin-right'] = false;
-                if (this.spinNumbers) {
+                if (this.spinSymbols) {
+                    var rnd = Math.floor(Math.random() * 2);
+                    if (rnd === 0) {
+                        this.cells[i].cssClasses['spin-left'] = true;
+                    } else {
+                        this.cells[i].cssClasses['spin-right'] = true;
+                    }
+                }
+            }
+        },
+        updateSymbolTurns: function () {
+            for (var i = 0; i < this.cells.length; i++) {
+                this.cells[i].cssClasses['spin-left'] = false;
+                this.cells[i].cssClasses['spin-right'] = false;
+                if (this.spinSymbols) {
                     var rnd = Math.floor(Math.random() * 2);
                     if (rnd === 0) {
                         this.cells[i].cssClasses['spin-left'] = true;

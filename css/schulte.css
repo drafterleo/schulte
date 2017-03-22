@@ -42,6 +42,7 @@ body {
     height: 100%;
 
     border: 1px solid #ccc;
+    cursor: default;
 
     font-size: calc(8vmin);
     font-weight: bold;

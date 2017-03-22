@@ -26,13 +26,11 @@
                           'wrong-cell'  : showHitResult && (clickedCell == r*gridSize + c) && clickedCell != correctIndex,
                           'traced-cell' : showTrace && tracedCell(r*gridSize + c)
                           }">
-                <span :class="[cells[r*gridSize + c].cssClasses]">{{ cells[r*gridSize + c].number }}</span>
+                <span :class="[cells[r*gridSize + c].cssClasses]" style="cursor: default;">
+                    {{ cells[r*gridSize + c].number }}
+                </span>
             </div>
         </div>
-
-        <!--<button class="settings-btn w3-button w3-xlarge w3-black"-->
-                <!--onclick="document.getElementById('id01').style.display='block'">-->
-        <!--Settings</button>-->
 
         <button id="settings-btn"
                 @click="execDialog">

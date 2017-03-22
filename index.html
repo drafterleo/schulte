@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="css/w3.css">
+    <link rel="stylesheet" href="css/schulte.css">
+    <script src="js/vue.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <div id="app" class="wrapper w3-container w3-padding-0 w3-margin-0"
+         tabindex="-1"
+         @keyup.esc="dialogShowed ? hideDialog() : execDialog('settings')"
+         v-focus>
+
+        <div v-for="r in gridRange" class="row" :style="{height: rowHeight}">
+            <div v-for="c in gridRange" class="cell" :style="{width: colWidth}"
+                 @mouseover="hoveredCell = r*gridSize + c"
+                 @mouseleave="hoveredCell = -1"
+                 @click="selectedCell = r*gridSize + c"
+                 :class="{'normal-cell' : !showHover && !showSelect,
+                          'hovered-cell': showHover && (hoveredCell == r*gridSize + c),
+                          'correct-cell': showHitResult && (selectedCell == r*gridSize + c) && selectedCell == correctIndex,
+                          'wrong-cell'  : showHitResult && (selectedCell == r*gridSize + c) && selectedCell != correctIndex,
+                          'traced-cell' : showTrace && tracedCell(r*gridSize + c)
+                          }">
+                <span :class="[cells[r*gridSize + c].cssClasses]">{{ cells[r*gridSize + c].number }}</span>
+            </div>
+        </div>
+
+        <!--<button class="settings-btn w3-button w3-xlarge w3-black"-->
+                <!--onclick="document.getElementById('id01').style.display='block'">-->
+        <!--Settings</button>-->
+
+        <button id="settings-btn"
+                @click="execDialog">
+            <img src="img/settings_48.png" class="w3-opacity-max">
+        </button>
+
+        <div class="w3-modal"
+             :class="[dialogShowed ? 'display-block' : 'display-none']">
+            <div class="w3-modal-content w3-card-8 w3-animate-zoom" style="max-width:500px">
+                <header class="w3-container w3-blue">
+                    <span @click="hideDialog"
+                          class="w3-button  w3-display-topright w3-xlarge w3-blue w3-hover-blue w3-hover-text-black"
+                          title="Close">
+                    &times;
+                    </span>
+                    <h3><a href="#" target="_blank">Schulte Table</a></h3>
+                </header>
+
+                <div class="w3-bar w3-border-bottom">
+                    <button class="tablink w3-bar-item w3-button"
+                            @click="changeDialogTab('settings')"
+                            :class="[settingsTabVisible  ? 'w3-light-gray' : 'w3-white']">
+                        Settings
+                    </button>
+                    <button class="tablink w3-bar-item w3-button"
+                            @click="changeDialogTab('stats')"
+                            :class="[statsTabVisible ? 'w3-light-gray' : 'w3-white']">
+                        Stats
+                    </button>
+                </div>
+
+                <div class="w3-container w3-margin w3-padding-0" v-if="settingsTabVisible">
+                    <label for="grid_size" class="w3-text-black w3-block"
+                           style="width: 100px;">
+                        <b>Grid Size</b>
+                    </label>
+                    <input id="grid_size" type="number" min="2" max="9" step="1" value="5" required
+                           class="w3-input w3-border w3-xlarge  w3-center w3-padding-0"
+                           style="width: 100px;"
+                           @input="changeGridSize">
+                    <hr style="margin: 10px 0">
+                    <div class="w3-row">
+                        <div class="w3-container w3-col w3-padding-0" style="width: 50%">
+                            <p>
+                            <input class="w3-check" type="checkbox" v-model="showHover">
+                            <label class="w3-validate">Show Hover</label> </p>
+                            <p>
+                            <input class="w3-check" type="checkbox" v-model="showTrace">
+                            <label class="w3-validate">Show Trace</label> </p>
+                            <p>
+                            <input class="w3-check" type="checkbox" v-model="showHitResult">
+                            <label class="w3-validate">Show Hit Result</label> </p>
+                        </div>
+                        <div class="w3-container w3-col w3-padding-0" style="width: 50%">
+                            <p>
+                            <input class="w3-check" type="checkbox" v-model="turnNumbers">
+                            <label class="w3-validate">Turn Numbers</label> </p>
+                            <p>
+                            <input class="w3-check" type="checkbox" v-model="spinNumbers">
+                            <label class="w3-validate">Spin Numbers</label> </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="w3-container w3" v-if="statsTabVisible">
+                    <h1>Stats</h1>
+                </div>
+
+                <footer class="w3-container w3-light-grey w3-center">
+                    <button type="button"
+                            class="w3-btn w3-indigo w3-border w3-border-indigo w3-text-white w3-xlarge"
+                            style="width: 80%; margin: 10px;"
+                            @click="hideDialog(); startGame()">
+                        Start
+                    </button>
+                </footer>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/schulte.js"></script>
+</body>
+</html>

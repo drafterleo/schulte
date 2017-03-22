@@ -44,38 +44,52 @@
             <div class="w3-modal-content w3-card-8 w3-animate-zoom" style="max-width:500px">
                 <header class="w3-container w3-blue">
                     <span @click="hideDialog"
-                          class="w3-button  w3-display-topright w3-xlarge w3-blue w3-hover-blue w3-hover-text-black"
-                          title="Close">
+                          class="w3-button w3-display-topright w3-xlarge w3-blue w3-hover-blue w3-hover-text-black"
+                          title="Resume Test">
                     &times;
                     </span>
-                    <h3><a href="#" target="_blank">Schulte Table</a></h3>
+                    <h2>Schulte Table Test</h2>
                 </header>
 
                 <div class="w3-bar w3-border-bottom">
-                    <button class="tablink w3-bar-item w3-button"
+                    <button class="tablink w3-bar-item w3-button w3-hover-indigo"
                             @click="changeDialogTab('settings')"
-                            :class="[settingsTabVisible  ? 'w3-light-gray' : 'w3-white']">
+                            :class="[settingsTabVisible  ? 'w3-teal w3-text-white' : 'w3-white']">
                         Settings
                     </button>
-                    <button class="tablink w3-bar-item w3-button"
+                    <button class="tablink w3-bar-item w3-button w3-hover-indigo"
                             @click="changeDialogTab('stats')"
-                            :class="[statsTabVisible ? 'w3-light-gray' : 'w3-white']">
+                            :class="[statsTabVisible ? 'w3-teal w3-text-white' : 'w3-white']">
                         Stats
                     </button>
                 </div>
 
                 <div class="w3-container w3-margin w3-padding-0" v-if="settingsTabVisible">
-                    <label for="grid_size" class="w3-text-black w3-block"
-                           style="width: 100px;">
-                        <b>Grid Size</b>
-                    </label>
-                    <input id="grid_size" type="number" min="2" max="9" step="1" value="5" required
-                           class="w3-input w3-border w3-xlarge  w3-center w3-padding-0"
-                           style="width: 100px;"
-                           @input="changeGridSize">
-                    <hr style="margin: 10px 0">
                     <div class="w3-row">
-                        <div class="w3-container w3-col w3-padding-0" style="width: 50%">
+                        <div class="w3-col w3-half">
+                            <label for="grid_size" class="w3-text-black w3-block"
+                                   style="width: 100px;">
+                                <b>Grid</b>
+                            </label>
+                            <select id="grid_size"
+                                    class="w3-select w3-border"
+                                    v-model="gridSize">
+                                <option value="2">2 x 2</option>
+                                <option value="3">3 x 3</option>
+                                <option value="4">4 x 4</option>
+                                <option value="5">5 x 5</option>
+                                <option value="6">6 x 6</option>
+                                <option value="7">7 x 7</option>
+                                <option value="8">8 x 8</option>
+                                <option value="9">9 x 9</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <hr style="margin: 10px 0">
+
+                    <div class="w3-row">
+                        <div class="w3-container w3-col w3-half w3-padding-0">
                             <p>
                             <input class="w3-check" type="checkbox" v-model="showHover">
                             <label class="w3-validate">Show Hover</label> </p>
@@ -86,7 +100,7 @@
                             <input class="w3-check" type="checkbox" v-model="showHitResult">
                             <label class="w3-validate">Show Hit Result</label> </p>
                         </div>
-                        <div class="w3-container w3-col w3-padding-0" style="width: 50%">
+                        <div class="w3-container w3-col w3-half w3-padding-0" style="width: 50%">
                             <p>
                             <input class="w3-check" type="checkbox" v-model="turnNumbers">
                             <label class="w3-validate">Turn Numbers</label> </p>
@@ -103,10 +117,10 @@
 
                 <footer class="w3-container w3-light-grey w3-center">
                     <button type="button"
-                            class="w3-btn w3-indigo w3-border w3-border-indigo w3-text-white w3-xlarge"
+                            class="w3-btn w3-indigo w3-text-white w3-xlarge"
                             style="width: 80%; margin: 10px;"
                             @click="hideDialog(); startGame()">
-                        Start
+                        Start Test
                     </button>
                 </footer>
             </div>

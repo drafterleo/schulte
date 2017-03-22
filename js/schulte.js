@@ -37,7 +37,31 @@ var appData = {
 
     dialogShowed: false,
     settingsTabVisible: true,
-    statsTabVisible: false
+    statsTabVisible: false,
+
+    stats: {
+        startTime: new Date(),
+        stopTime: new Date(),
+        correctHits: 0,
+        wrongHits: 0,
+        clear: function () {
+            this.startTime = new Date(),
+                this.stopTime = new Date(),
+                this.correctHits = 0,
+                this.wrongHits = 0
+        },
+        timeDiff: function () {
+            var diff = (this.stopTime - this.startTime); // milliseconds between
+            var days = Math.floor(diff / 86400000);
+            var hours = Math.floor((diff % 86400000) / 3600000);
+            var minutes = Math.floor(((diff % 86400000) % 3600000) / 60000);
+            var seconds = Math.round(((diff % 86400000) % 3600000) / 1000);
+
+            return ("0" + hours).slice (-2) + ':' +
+                   ("0" + minutes).slice (-2) + ':' +
+                   ("0" + seconds).slice (-2);
+        }
+    }
 };
 
 Vue.directive('focus', {                   // https://jsfiddle.net/LukaszWiktor/cap43pdn/
@@ -114,6 +138,7 @@ vueApp = new Vue({
             this.updateSymbolTurns();
             this.updateSymbolSpins();
             this.trace = [];
+            this.stats.clear();
             this.shuffleCells(1000);
             //console.log('init game');
         },
@@ -125,6 +150,7 @@ vueApp = new Vue({
         stopGame: function () {
             this.clearIndexes();
             clearTimeout(this.selectedTimerId);
+            this.stats.stopTime = new Date();
             this.gameStarted = false;
         },
         clearIndexes: function () {
@@ -135,6 +161,7 @@ vueApp = new Vue({
         nextTurn: function () {
             if (this.selectedCell >= 0 && this.selectedCell < this.cells.length) {
                 if (this.cells[this.selectedCell].number === this.currNum) {      // correct answer
+                    this.stats.correctHits ++;
                     this.correctIndex = this.indexOfCellByNumber(this.currNum);
                     this.currNum++;
                     if (this.currNum > this.cells.length) {
@@ -145,6 +172,9 @@ vueApp = new Vue({
                         //console.log('game over!')
                         //setTimeout(this.initGame, 1000);
                     }
+                } else {
+                    this.stats.wrongHits ++;
+                    this.correctIndex = -1;
                 }
             }
         },

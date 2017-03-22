@@ -41,7 +41,7 @@
 
         <div class="w3-modal"
              :class="[dialogShowed ? 'display-block' : 'display-none']">
-            <div class="w3-modal-content w3-card-8 w3-animate-zoom" style="max-width:500px">
+            <div class="w3-modal-content w3-card-8 w3-animate-zoom" style="max-width:600px">
                 <header class="w3-container w3-blue">
                     <span @click="hideDialog"
                           class="w3-button w3-display-topright w3-xlarge w3-blue w3-hover-blue w3-hover-text-black"
@@ -66,9 +66,8 @@
 
                 <div class="w3-container w3-margin w3-padding-0" v-if="settingsTabVisible">
                     <div class="w3-row">
-                        <div class="w3-col w3-half">
-                            <label for="grid_size" class="w3-text-black w3-block"
-                                   style="width: 100px;">
+                        <div class="w3-col w3-third">
+                            <label for="grid_size" class="w3-text-black w3-block">
                                 <b>Grid</b>
                             </label>
                             <select id="grid_size"
@@ -88,8 +87,8 @@
 
                     <hr style="margin: 10px 0">
 
-                    <div class="w3-row">
-                        <div class="w3-container w3-col w3-half w3-padding-0">
+                    <div class="w3-row w3-margin-0">
+                        <div class="w3-panel w3-col w3-half m6 w3-padding-0">
                             <p>
                             <input class="w3-check" type="checkbox" v-model="showHover">
                             <label class="w3-validate">Show Hover</label> </p>
@@ -100,7 +99,7 @@
                             <input class="w3-check" type="checkbox" v-model="showHitResult">
                             <label class="w3-validate">Show Hit Result</label> </p>
                         </div>
-                        <div class="w3-container w3-col w3-half w3-padding-0" style="width: 50%">
+                        <div class="w3-panel w3-col w3-third m4 w3-padding-0">
                             <p>
                             <input class="w3-check" type="checkbox" v-model="turnSymbols">
                             <label class="w3-validate">Turn Numbers</label> </p>
@@ -111,8 +110,21 @@
                     </div>
                 </div>
 
-                <div class="w3-container w3" v-if="statsTabVisible">
-                    <h1>Stats</h1>
+                <div class="w3-container w3-margin" v-if="statsTabVisible">
+                    <table class="w3-table-all w3-large">
+                        <tr>
+                            <td>Time</td>
+                            <td>{{ stats.timeDiff() }}</td>
+                        </tr>
+                        <tr class="w3-pale-green">
+                            <td>Correct Hits</td>
+                            <td>{{ stats.correctHits }}</td>
+                        </tr>
+                        <tr class="w3-pale-red">
+                            <td>Wrong Hits</td>
+                            <td>{{ stats.wrongHits }}</td>
+                        </tr>
+                    </table>
                 </div>
 
                 <footer class="w3-container w3-light-grey w3-center">

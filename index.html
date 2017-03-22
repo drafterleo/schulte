@@ -19,11 +19,11 @@
             <div v-for="c in gridRange" class="cell" :style="{width: colWidth}"
                  @mouseover="hoveredCell = r*gridSize + c"
                  @mouseleave="hoveredCell = -1"
-                 @click="selectedCell = r*gridSize + c"
+                 @click="clickedCell = r*gridSize + c"
                  :class="{'normal-cell' : !showHover && !showSelect,
                           'hovered-cell': showHover && (hoveredCell == r*gridSize + c),
-                          'correct-cell': showHitResult && (selectedCell == r*gridSize + c) && selectedCell == correctIndex,
-                          'wrong-cell'  : showHitResult && (selectedCell == r*gridSize + c) && selectedCell != correctIndex,
+                          'correct-cell': showHitResult && (clickedCell == r*gridSize + c) && clickedCell == correctIndex,
+                          'wrong-cell'  : showHitResult && (clickedCell == r*gridSize + c) && clickedCell != correctIndex,
                           'traced-cell' : showTrace && tracedCell(r*gridSize + c)
                           }">
                 <span :class="[cells[r*gridSize + c].cssClasses]">{{ cells[r*gridSize + c].number }}</span>
@@ -90,22 +90,25 @@
                     <div class="w3-row w3-margin-0">
                         <div class="w3-container w3-col w3-half w3-padding-0" style="min-width: 200px;">
                             <p>
-                            <input class="w3-check" type="checkbox" v-model="showHover">
-                            <label class="w3-validate">Show Hover</label> </p>
+                                <input class="w3-check" type="checkbox" v-model="showHover">
+                                <label class="w3-validate">Show Hover</label> </p>
                             <p>
-                            <input class="w3-check" type="checkbox" v-model="showTrace">
-                            <label class="w3-validate">Show Trace</label> </p>
+                                <input class="w3-check" type="checkbox" v-model="showTrace">
+                                <label class="w3-validate">Show Trace</label> </p>
                             <p>
-                            <input class="w3-check" type="checkbox" v-model="showHitResult">
-                            <label class="w3-validate">Show Hit Result</label> </p>
+                                <input class="w3-check" type="checkbox" v-model="showHitResult">
+                                <label class="w3-validate">Show Hit Result</label> </p>
                         </div>
                         <div class="w3-container w3-col w3-third w3-padding-0" style="min-width: 200px;">
                             <p>
-                            <input class="w3-check" type="checkbox" v-model="turnSymbols">
-                            <label class="w3-validate">Turn Numbers</label> </p>
+                                <input class="w3-check" type="checkbox" v-model="shuffleSymbols">
+                                <label class="w3-validate">Shuffle Numbers</label> </p>
                             <p>
-                            <input class="w3-check" type="checkbox" v-model="spinSymbols">
-                            <label class="w3-validate">Spin Numbers</label> </p>
+                                <input class="w3-check" type="checkbox" v-model="turnSymbols">
+                                <label class="w3-validate">Turn Numbers</label> </p>
+                            <p>
+                                <input class="w3-check" type="checkbox" v-model="spinSymbols">
+                                <label class="w3-validate">Spin Numbers</label> </p>
                         </div>
                     </div>
                 </div>

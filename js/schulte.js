@@ -21,12 +21,13 @@ var appData = {
     gameStarted: false,
 
     hoverIndex: -1,
-    selectIndex: -1,
+    clickIndex: -1,
     correctIndex: -1,
 
     showHover: true,
     showHitResult: true,
     showTrace: true,
+    shuffleSymbols: false,
     turnSymbols: false,
     spinSymbols: false,
 
@@ -52,10 +53,12 @@ var appData = {
         },
         timeDiff: function () {
             var diff = (this.stopTime - this.startTime); // milliseconds between
-            var days = Math.floor(diff / 86400000);
-            var hours = Math.floor((diff % 86400000) / 3600000);
-            var minutes = Math.floor(((diff % 86400000) % 3600000) / 60000);
-            var seconds = Math.round(((diff % 86400000) % 3600000) / 1000);
+            diff = diff / 1000;
+            var seconds = Math.floor(diff % 60);
+            diff = diff / 60;
+            var minutes = Math.floor(diff % 60);
+            diff = diff / 60;
+            var hours = Math.floor(diff % 24);
 
             return ("0" + hours).slice (-2) + ':' +
                    ("0" + minutes).slice (-2) + ':' +
@@ -106,13 +109,13 @@ vueApp = new Vue({
         }
     },
     computed: {
-        selectedCell: {
+        clickedCell: {
             get: function () {
-                return this.selectIndex;
+                return this.clickIndex;
             },
             set: function (cellIdx) {
                 if (this.gameStarted) {
-                    this.selectIndex = cellIdx;
+                    this.clickIndex = cellIdx;
                     this.showHitResult = true;
                     clearTimeout(this.selectedTimerId);
                     this.selectedTimerId = setTimeout(this.hideSelect, this.selectTimeOut);
@@ -155,22 +158,23 @@ vueApp = new Vue({
         },
         clearIndexes: function () {
             this.hoverIndex = -1;
-            this.selectIndex = -1;
+            this.clickIndex = -1;
             this.correctIndex = -1;
         },
         nextTurn: function () {
-            if (this.selectedCell >= 0 && this.selectedCell < this.cells.length) {
-                if (this.cells[this.selectedCell].number === this.currNum) {      // correct answer
+            if (this.clickedCell >= 0 && this.clickedCell < this.cells.length) {
+                if (this.cells[this.clickedCell].number === this.currNum) {      // correct answer
                     this.stats.correctHits ++;
+                    if (this.shuffleSymbols) {
+                        this.shuffleCells(1000);
+                    }
                     this.correctIndex = this.indexOfCellByNumber(this.currNum);
+                    this.clickIndex = this.correctIndex;
                     this.currNum++;
                     if (this.currNum > this.cells.length) {
                         this.stopGame();
-                        //alert('Game Over!');
                         this.execDialog('stats');
                         //this.startGame();
-                        //console.log('game over!')
-                        //setTimeout(this.initGame, 1000);
                     }
                 } else {
                     this.stats.wrongHits ++;

@@ -1,0 +1,166 @@
+* {
+    margin: 0;
+    box-sizing: border-box; /* padding and border incleded in the width/height */
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.wrapper {
+    width: 100vw;
+    height: 100vh;
+}
+
+.row {
+    width: 100%;
+    height: 50%;
+    margin: 0;
+}
+
+.cell {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: flex;
+
+    -webkit-user-select: none;
+    -moz-user-select: -moz-none;
+    -ms-user-select: none;
+    user-select: none;
+
+    justify-content: center; /* align horizontal */
+    align-items: center;
+
+    float: left;
+    padding: 0;
+
+    width: 50%;
+    height: 100%;
+
+    border: 1px solid #ccc;
+
+    font-size: calc(8vmin);
+    font-weight: bold;
+
+    transition: background 800ms;
+}
+
+.rotate-90 {
+    -ms-transform: rotate(90deg); /* IE 9 */
+    -webkit-transform: rotate(90deg); /* Chrome, Safari, Opera */
+    transform: rotate(90deg);
+}
+
+.rotate-180 {
+    -ms-transform: rotate(180deg); /* IE 9 */
+    -webkit-transform: rotate(180deg); /* Chrome, Safari, Opera */
+    transform: rotate(180deg);
+}
+
+.rotate-270 {
+    -ms-transform: rotate(270deg); /* IE 9 */
+    -webkit-transform: rotate(270deg); /* Chrome, Safari, Opera */
+    transform: rotate(270deg);
+}
+
+.spin-right {
+    animation: spin-right 2s infinite linear;
+    -webkit-animation: spin-right 2s infinite linear
+}
+@keyframes spin-right{
+    0%{-webkit-transform:rotate(0deg);transform:rotate(0deg)}
+    100%{-webkit-transform:rotate(359deg);transform:rotate(359deg)}
+}
+@-webkit-keyframes spin-right{
+    0% {-webkit-transform: rotate(0deg); transform: rotate(0deg)}
+    100%{-webkit-transform: rotate(359deg); transform: rotate(359deg)}
+}
+
+.spin-left {
+    animation: spin-left 2s infinite linear;
+    -webkit-animation: spin-left 2s infinite linear
+}
+@keyframes spin-left{
+    0%{-webkit-transform:rotate(0deg);transform:rotate(0deg)}
+    100%{-webkit-transform:rotate(-359deg);transform:rotate(-359deg)}
+}
+@-webkit-keyframes spin-left{
+    0% {-webkit-transform: rotate(0deg); transform: rotate(0deg)}
+    100%{-webkit-transform: rotate(-359deg); transform: rotate(-359deg)}
+}
+
+
+.cell-symbol {
+    color: inherit;
+    font-size: calc(8vmin);
+    font-weight: bold;
+}
+
+.normal-cell {
+    color: black;
+    background: white;
+}
+
+.hovered-cell {
+    color: black;
+    /*background: rgb(249, 246, 243);*/
+    border: 1px solid #555;
+}
+
+.traced-cell {
+    color: black;
+    background: #f2efec;
+}
+
+.selected-cell {
+    color: white;
+    background: navy;
+}
+
+.correct-cell {
+    color: black;
+    background: #bbf4b8;
+}
+
+.wrong-cell {
+    color: black;
+    background: #f4adad;
+}
+
+
+#settings-btn {
+    position: fixed;
+    right: 0;
+    top: 0;
+    padding: 0;
+    background: transparent;
+    border: none;
+    outline-style: none;
+}
+
+#settings-btn img {
+    opacity: 0.10;
+    transition: opacity 500ms;
+}
+
+#settings-btn img:hover {
+    opacity: 1;
+ }
+
+
+.grid-input {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+.display-block {
+    display: block;
+}
+
+.display-none {
+    display: none;
+}

@@ -79,7 +79,8 @@ vueApp = new Vue({
         },
         turnSymbols: function (val) {
             this.updateSymbolTurns();
-        }    },
+        }
+    },
     computed: {
         selectedCell: {
             get: function () {
@@ -110,6 +111,7 @@ vueApp = new Vue({
             this.clearIndexes();
             this.currNum = 1;
             this.makeCells(this.gridSize * this.gridSize);
+            this.updateSymbolTurns();
             this.updateSymbolSpins();
             this.trace = [];
             this.shuffleCells(1000);
@@ -229,14 +231,23 @@ vueApp = new Vue({
         },
         updateSymbolTurns: function () {
             for (var i = 0; i < this.cells.length; i++) {
-                this.cells[i].cssClasses['spin-left'] = false;
-                this.cells[i].cssClasses['spin-right'] = false;
-                if (this.spinSymbols) {
-                    var rnd = Math.floor(Math.random() * 2);
-                    if (rnd === 0) {
-                        this.cells[i].cssClasses['spin-left'] = true;
-                    } else {
-                        this.cells[i].cssClasses['spin-right'] = true;
+                this.cells[i].cssClasses['rotate-90'] = false;
+                this.cells[i].cssClasses['rotate-180'] = false;
+                this.cells[i].cssClasses['rotate-270'] = false;
+                if (this.turnSymbols) {
+                    var rnd = Math.floor(Math.random() * 4);
+                    switch (rnd) {
+                        case 0:
+                            this.cells[i].cssClasses['rotate-90'] = true;
+                            break;
+                        case 1:
+                            this.cells[i].cssClasses['rotate-180'] = true;
+                            break;
+                        case 2:
+                            this.cells[i].cssClasses['rotate-270'] = true;
+                            break;
+                        default:
+                            // no turn
                     }
                 }
             }

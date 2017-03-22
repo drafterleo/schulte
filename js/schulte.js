@@ -26,6 +26,7 @@ var appData = {
 
     showHover: true,
     showHitResult: true,
+    showHitAnimation: true,
     showTrace: true,
     shuffleSymbols: false,
     turnSymbols: false,
@@ -116,9 +117,13 @@ vueApp = new Vue({
             set: function (cellIdx) {
                 if (this.gameStarted) {
                     this.clickIndex = cellIdx;
-                    this.showHitResult = true;
-                    clearTimeout(this.selectedTimerId);
-                    this.selectedTimerId = setTimeout(this.hideSelect, this.selectTimeOut);
+                    if (this.showHitResult) {
+                        this.showHitAnimation = true;
+                        clearTimeout(this.selectedTimerId);
+                        this.selectedTimerId = setTimeout(this.hideSelect, this.selectTimeOut);
+                    } else {
+                        this.showHitAnimation = false;
+                    }
                     this.nextTurn();
                 }
             }
@@ -220,8 +225,8 @@ vueApp = new Vue({
             }
         },
         hideSelect: function () {
-            this.showHitResult = false;
-            //console.log('showHitResult timeout');
+            this.showHitAnimation = false;
+            //console.log('showHitAnimation timeout');
         },
         execDialog: function (tabName) {
             this.changeDialogTab(tabName)

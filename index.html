@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="css/w3.css">
     <link rel="stylesheet" href="css/schulte.css">
-    <script src="js/vue.min.js"></script>
+    <script src="js/vue.js"></script>
     <title>Document</title>
     <style>
         [v-cloak] {
@@ -25,10 +25,10 @@
                  @mouseover="hoveredCell = r*gridSize + c"
                  @mouseleave="hoveredCell = -1"
                  @click="clickedCell = r*gridSize + c"
-                 :class="{'normal-cell' : !showHover && !showSelect,
+                 :class="{'normal-cell' : !showHover && !showHitAnimation,
                           'hovered-cell': showHover && (hoveredCell == r*gridSize + c),
-                          'correct-cell': showHitResult && (clickedCell == r*gridSize + c) && clickedCell == correctIndex,
-                          'wrong-cell'  : showHitResult && (clickedCell == r*gridSize + c) && clickedCell != correctIndex,
+                          'correct-cell': showHitAnimation && (clickedCell == r*gridSize + c) && clickedCell == correctIndex,
+                          'wrong-cell'  : showHitAnimation && (clickedCell == r*gridSize + c) && clickedCell != correctIndex,
                           'traced-cell' : showTrace && tracedCell(r*gridSize + c)
                           }">
                 <span :class="[cells[r*gridSize + c].cssClasses]" style="cursor: default;">

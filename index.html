@@ -25,10 +25,10 @@
                  @mouseover="hoveredCell = r*gridSize + c"
                  @mouseleave="hoveredCell = -1"
                  @click="clickedCell = r*gridSize + c"
-                 :class="{'normal-cell' : !showHover && !showHitAnimation,
+                 :class="{'normal-cell' : !showHover && !showClickAnimation,
                           'hovered-cell': showHover && (hoveredCell == r*gridSize + c),
-                          'correct-cell': showHitAnimation && (clickedCell == r*gridSize + c) && clickedCell == correctIndex,
-                          'wrong-cell'  : showHitAnimation && (clickedCell == r*gridSize + c) && clickedCell != correctIndex,
+                          'correct-cell': showClickAnimation && (clickedCell == r*gridSize + c) && clickedCell == correctIndex,
+                          'wrong-cell'  : showClickAnimation && (clickedCell == r*gridSize + c) && clickedCell != correctIndex,
                           'traced-cell' : showTrace && tracedCell(r*gridSize + c)
                           }">
                 <span :class="[cells[r*gridSize + c].cssClasses]" style="cursor: default;">
@@ -100,8 +100,8 @@
                                 <input class="w3-check" type="checkbox" v-model="showTrace">
                                 <label class="w3-validate">Show Trace</label> </p>
                             <p>
-                                <input class="w3-check" type="checkbox" v-model="showHitResult">
-                                <label class="w3-validate">Show Hit Result</label> </p>
+                                <input class="w3-check" type="checkbox" v-model="showClickResult">
+                                <label class="w3-validate">Show Click Result</label> </p>
                         </div>
                         <div class="w3-container w3-col w3-third w3-padding-0" style="min-width: 200px;">
                             <p>
@@ -124,12 +124,12 @@
                             <td>{{ stats.timeDiff() }}</td>
                         </tr>
                         <tr class="w3-pale-green">
-                            <td>Correct Hits</td>
-                            <td>{{ stats.correctHits }}</td>
+                            <td>Correct Clicks</td>
+                            <td>{{ stats.correctClicks }}</td>
                         </tr>
                         <tr class="w3-pale-red">
-                            <td>Wrong Hits</td>
-                            <td>{{ stats.wrongHits }}</td>
+                            <td>Wrong Clicks</td>
+                            <td>{{ stats.wrongClicks }}</td>
                         </tr>
                     </table>
                 </div>

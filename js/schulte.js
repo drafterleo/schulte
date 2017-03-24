@@ -25,8 +25,8 @@ var appData = {
     correctIndex: -1,
 
     showHover: true,
-    showHitResult: true,
-    showHitAnimation: true,
+    showClickResult: true,
+    showClickAnimation: true,
     showTrace: true,
     shuffleSymbols: false,
     turnSymbols: false,
@@ -44,13 +44,13 @@ var appData = {
     stats: {
         startTime: new Date(),
         stopTime: new Date(),
-        correctHits: 0,
-        wrongHits: 0,
+        correctClicks: 0,
+        wrongClicks: 0,
         clear: function () {
             this.startTime = new Date(),
                 this.stopTime = new Date(),
-                this.correctHits = 0,
-                this.wrongHits = 0
+                this.correctClicks = 0,
+                this.wrongClicks = 0
         },
         timeDiff: function () {
             var diff = (this.stopTime - this.startTime); // milliseconds between
@@ -117,12 +117,12 @@ vueApp = new Vue({
             set: function (cellIdx) {
                 if (this.gameStarted) {
                     this.clickIndex = cellIdx;
-                    if (this.showHitResult) {
-                        this.showHitAnimation = true;
+                    if (this.showClickResult) {
+                        this.showClickAnimation = true;
                         clearTimeout(this.selectedTimerId);
                         this.selectedTimerId = setTimeout(this.hideSelect, this.selectTimeOut);
                     } else {
-                        this.showHitAnimation = false;
+                        this.showClickAnimation = false;
                     }
                     this.nextTurn();
                 }
@@ -169,7 +169,7 @@ vueApp = new Vue({
         nextTurn: function () {
             if (this.clickedCell >= 0 && this.clickedCell < this.cells.length) {
                 if (this.cells[this.clickedCell].number === this.currNum) {      // correct answer
-                    this.stats.correctHits ++;
+                    this.stats.correctClicks ++;
                     if (this.shuffleSymbols) {
                         this.shuffleCells(1000);
                     }
@@ -182,7 +182,7 @@ vueApp = new Vue({
                         //this.startGame();
                     }
                 } else {
-                    this.stats.wrongHits ++;
+                    this.stats.wrongClicks ++;
                     this.correctIndex = -1;
                 }
             }
@@ -225,8 +225,8 @@ vueApp = new Vue({
             }
         },
         hideSelect: function () {
-            this.showHitAnimation = false;
-            //console.log('showHitAnimation timeout');
+            this.showClickAnimation = false;
+            //console.log('showClickAnimation timeout');
         },
         execDialog: function (tabName) {
             this.changeDialogTab(tabName)

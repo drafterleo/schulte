@@ -10,7 +10,6 @@ function Cell(number) {
     };
 }
 
-
 var appData = {
     gridSize: 5,
     gridRange: [0, 1, 2, 3, 4],
@@ -47,10 +46,10 @@ var appData = {
         correctClicks: 0,
         wrongClicks: 0,
         clear: function () {
-            this.startTime = new Date(),
-                this.stopTime = new Date(),
-                this.correctClicks = 0,
-                this.wrongClicks = 0
+            this.startTime = new Date();
+            this.stopTime = new Date();
+            this.correctClicks = 0;
+            this.wrongClicks = 0;
         },
         timeDiff: function () {
             var diff = (this.stopTime - this.startTime); // milliseconds between
@@ -292,6 +291,5 @@ vueApp = new Vue({
                 }
             }
         }
-
     }
 });

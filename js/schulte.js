@@ -118,7 +118,7 @@ vueApp = new Vue({
             this.rowHeight = 100 / val + '%';
             this.colWidth = 100 / val + '%';
 
-            this.startGame();
+            this.initGame();
         },
         spinSymbols: function (val) {
             this.updateSymbolSpins();
@@ -143,21 +143,23 @@ vueApp = new Vue({
     },
     methods: {
         initGame: function () {
+            this.gameStarted = false;
             this.clearIndexes();
             this.currNum = 1;
             this.makeCells(this.gridSize * this.gridSize);
+            this.shuffleCells(1000);
             this.updateSymbolTurns();
             this.updateSymbolSpins();
             this.trace = [];
             this.stats.clear();
-            this.shuffleCells(1000);
-            //console.log('init game');
+            this.mouseMoves.length = 0;
+            this.mouseClicks.length = 0;
+            this.mouseTracking = false;
         },
         startGame: function () {
             this.initGame();
             this.startMouseTracking();
             this.gameStarted = true;
-            //console.log('start game');
         },
         stopGame: function () {
             this.clearIndexes();

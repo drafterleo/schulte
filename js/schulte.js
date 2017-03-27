@@ -381,7 +381,7 @@ vueApp = new Vue({
         drawMousemapMoves: function (ctx, W,  H) {
             if (ctx) {
                 ctx.beginPath();
-                ctx.strokeStyle = '#6390f7'; //'#6390f7';
+                ctx.strokeStyle = '#1f6ef7'; //'#f78383';
                 ctx.lineWidth = 2;
                 for (var i = 0; i + 1 < this.mouseMoves.length; i ++) {
                     var x0 = this.mouseMoves[i].x * W;
@@ -404,11 +404,11 @@ vueApp = new Vue({
                     var centerY = this.mouseClicks[i].y * H;
                     ctx.beginPath();
                     if (this.mouseClicks[i].correct) {
-                        ctx.fillStyle = '#52a352';
-                        ctx.strokeStyle = '#6ac46a';
+                        ctx.fillStyle = '#52a352'; //'#6ac46a';
+                        ctx.strokeStyle = '#52a352';
                     } else {
-                        ctx.fillStyle = '#ba2a29';
-                        ctx.strokeStyle = '#f44f4d';
+                        ctx.fillStyle = '#ba2a29'; //'#f44f4d';
+                        ctx.strokeStyle = '#ba2a29';
                     }
                     ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
                     ctx.fill();

@@ -229,7 +229,7 @@ vueApp = new Vue({
             //console.log('showClickAnimation timeout');
         },
         execDialog: function (tabName) {
-            this.changeDialogTab(tabName)
+            this.changeDialogTab(tabName);
             this.stats.stopTime = new Date();
             this.dialogShowed = true;
         },

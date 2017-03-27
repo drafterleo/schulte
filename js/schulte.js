@@ -342,8 +342,8 @@ vueApp = new Vue({
         },
         appendMouseMove: function(event) {
             if (this.mouseTracking) {
-                var nx = event.clientX / this.$el.clientWidth;  // normalize in [0, 1] interval
-                var ny = event.clientY / this.$el.clientHeight;
+                var nx = event.pageX / this.$el.clientWidth;  // normalize in [0, 1] interval
+                var ny = event.pageY / this.$el.clientHeight;
                 this.mouseMoves.push(new Point(nx, ny));
             }
         },

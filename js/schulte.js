@@ -177,8 +177,10 @@ vueApp = new Vue({
             if (this.gameStarted) {
                 this.clickIndex = cellIdx;
                 if (this.showClickResult) {
+                    if (this.showClickAnimation) {
+                        clearTimeout(this.selectedTimerId);
+                    }
                     this.showClickAnimation = true;
-                    clearTimeout(this.selectedTimerId);
                     this.selectedTimerId = setTimeout(this.hideSelect, this.selectTimeOut);
                 } else {
                     this.showClickAnimation = false;
@@ -196,8 +198,8 @@ vueApp = new Vue({
             }
         },
         nextTurn: function () {
-            if (this.clickedCell >= 0 && this.clickedCell < this.cells.length) {
-                if (this.cells[this.clickedCell].number === this.currNum) {      // correct answer
+            if (this.clickIndex >= 0 && this.clickIndex < this.cells.length) {
+                if (this.cells[this.clickIndex].number === this.currNum) {      // correct answer
                     this.stats.correctClicks ++;
                     if (this.shuffleSymbols) {
                         this.shuffleCells(1000);
@@ -208,7 +210,6 @@ vueApp = new Vue({
                     if (this.currNum > this.cells.length) {
                         this.stopGame();
                         this.execDialog('stats');
-                        //this.startGame();
                     }
                 } else {
                     this.stats.wrongClicks ++;

@@ -15,6 +15,12 @@ function Point(x, y) {
     this.y = y;
 }
 
+function Click(x, y, correct) {
+    this.x = x;
+    this.y = y;
+    this.correct = true;
+}
+
 var appData = {
     gridSize: 5,
     gridRange: [0, 1, 2, 3, 4],
@@ -38,7 +44,7 @@ var appData = {
 
     mouseTracking: false,
     mouseMoves: [],   // array of Point
-    mouseClicks: [],  // array of Point
+    mouseClicks: [],  // array of Click
 
     rowHeight: '20%',
     colWidth: '20%',
@@ -122,23 +128,8 @@ vueApp = new Vue({
         }
     },
     computed: {
-        clickedCell: {
-            get: function () {
-                return this.clickIndex;
-            },
-            set: function (cellIdx) {
-                if (this.gameStarted) {
-                    this.clickIndex = cellIdx;
-                    if (this.showClickResult) {
-                        this.showClickAnimation = true;
-                        clearTimeout(this.selectedTimerId);
-                        this.selectedTimerId = setTimeout(this.hideSelect, this.selectTimeOut);
-                    } else {
-                        this.showClickAnimation = false;
-                    }
-                    this.nextTurn();
-                }
-            }
+        clickedCell: function () {
+            return this.clickIndex;
         },
         hoveredCell: {
             get: function () {
@@ -179,6 +170,28 @@ vueApp = new Vue({
             this.hoverIndex = -1;
             this.clickIndex = -1;
             this.correctIndex = -1;
+        },
+        setClickedCell: function (event, cellIdx) {
+            if (this.gameStarted) {
+                this.clickIndex = cellIdx;
+                if (this.showClickResult) {
+                    this.showClickAnimation = true;
+                    clearTimeout(this.selectedTimerId);
+                    this.selectedTimerId = setTimeout(this.hideSelect, this.selectTimeOut);
+                } else {
+                    this.showClickAnimation = false;
+                }
+
+                // append mouseClick
+                if (this.mouseTracking) {
+                    var nx = event.pageX / this.$el.clientWidth;  // normalize in [0, 1] interval
+                    var ny = event.pageY / this.$el.clientHeight;
+                    var correct = (this.cells[this.clickIndex].number === this.currNum);
+                    this.mouseClicks.push(new Click(nx, ny, correct));
+                }
+
+                this.nextTurn();
+            }
         },
         nextTurn: function () {
             if (this.clickedCell >= 0 && this.clickedCell < this.cells.length) {
@@ -315,6 +328,7 @@ vueApp = new Vue({
         },
         startMouseTracking: function () {
             this.mouseMoves.length = 0;
+            this.mouseClicks.length = 0;
             this.mouseTracking = true;
         },
         restartMouseTracking: function () {
@@ -323,18 +337,11 @@ vueApp = new Vue({
         stopMouseTracking: function () {
             this.mouseTracking = false;
         },
-        updateMouseMoves: function(event) {
+        appendMouseMove: function(event) {
             if (this.mouseTracking) {
                 var nx = event.clientX / this.$el.clientWidth;  // normalize in [0, 1] interval
                 var ny = event.clientY / this.$el.clientHeight;
                 this.mouseMoves.push(new Point(nx, ny));
-            }
-        },
-        updateMouseClicks: function(event) {
-            if (this.mouseTracking) {
-                var nx = event.clientX / this.$el.clientWidth;  // normalize in [0, 1] interval
-                var ny = event.clientY / this.$el.clientHeight;
-                this.mouseClicks.push(new Point(nx, ny));
             }
         },
         drawMousemap: function () {
@@ -349,13 +356,16 @@ vueApp = new Vue({
                     ctx.clearRect(0, 0, W, H);
 
                     this.drawMouseMoves(ctx, W, H);
+
+                    this.drawMouseClicks(ctx, W, H)
                 }
             }
         },
         drawMouseMoves: function (ctx, W,  H) {
             if (ctx) {
                 ctx.beginPath();
-                ctx.strokeStyle = 'red';
+                ctx.strokeStyle = '#880000';
+                ctx.lineWidth = 1;
                 for (var i = 0; i + 1 < this.mouseMoves.length; i ++) {
                     var x0 = this.mouseMoves[i].x * W;
                     var y0 = this.mouseMoves[i].y * H;
@@ -368,5 +378,30 @@ vueApp = new Vue({
                 ctx.closePath();
             }
         },
+        drawMouseClicks: function (ctx, W,  H) {
+            if (ctx) {
+                ctx.lineWidth = 1;
+                for (var i = 0; i < this.mouseClicks.length; i ++) {
+                    var centerX = this.mouseClicks[i].x * W;
+                    var centerY = this.mouseClicks[i].y * H;
+                    var radius;
+                    ctx.beginPath();
+                    if (this.mouseClicks[i].correct) {
+                        radius = 5;
+                        ctx.fillStyle = '#008800';
+                        ctx.strokeStyle = '#00AA00';
+                    } else {
+                        radius = 7;
+                        ctx.fillStyle = '#880000';
+                        ctx.strokeStyle = '#AA0000';
+                        console.log("draw red");
+                    }
+                    ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+                    ctx.fill();
+                    ctx.stroke();
+                    ctx.closePath();
+                }
+            }
+        }
     }
 });

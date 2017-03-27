@@ -17,16 +17,15 @@
 <body>
     <div id="app" class="wrapper w3-container w3-padding-0 w3-margin-0"
          tabindex="-1"
+         @mousemove="appendMouseMove($event)"
          @keyup.esc="dialogShowed ? hideDialog() : execDialog('settings')"
-         @mousemove="updateMouseMoves($event)"
-         @click="updateMouseClicks($event)"
          v-focus v-cloak>
 
         <div v-for="r in gridRange" class="row" :style="{height: rowHeight}">
             <div v-for="c in gridRange" class="cell" :style="{width: colWidth}"
                  @mouseover="hoveredCell = r*gridSize + c"
                  @mouseleave="hoveredCell = -1"
-                 @click="clickedCell = r*gridSize + c"
+                 @click="setClickedCell($event, r*gridSize + c)"
                  :class="{'normal-cell' : !showHover && !showClickAnimation,
                           'hovered-cell': showHover && (hoveredCell == r*gridSize + c),
                           'correct-cell': showClickAnimation && (clickedCell == r*gridSize + c) && clickedCell == correctIndex,

@@ -10,10 +10,15 @@ function Cell(number) {
     };
 }
 
+function Point(x, y) {
+    this.x = x;
+    this.y = y;
+}
+
 var appData = {
     gridSize: 5,
     gridRange: [0, 1, 2, 3, 4],
-    cells: [], // array of Cell object
+    cells: [], // array of Cell
     trace: [],
     currNum: 1,
 
@@ -30,6 +35,10 @@ var appData = {
     shuffleSymbols: false,
     turnSymbols: false,
     spinSymbols: false,
+
+    mouseTracking: false,
+    mouseMoves: [],   // array of Point
+    mouseClicks: [],  // array of Point
 
     rowHeight: '20%',
     colWidth: '20%',
@@ -89,6 +98,9 @@ vueApp = new Vue({
         this.execDialog('settings');
     },
     updated: function () {
+        if (this.dialogShowed && this.mousemapTabVisible) {
+            this.drawMousemap();
+        }
     },
     watch: {
         gridSize: function (val) {
@@ -152,6 +164,7 @@ vueApp = new Vue({
         },
         startGame: function () {
             this.initGame();
+            this.startMouseTracking();
             this.gameStarted = true;
             //console.log('start game');
         },
@@ -160,6 +173,7 @@ vueApp = new Vue({
             clearTimeout(this.selectedTimerId);
             this.stats.stopTime = new Date();
             this.gameStarted = false;
+            this.stopMouseTracking();
         },
         clearIndexes: function () {
             this.hoverIndex = -1;
@@ -232,6 +246,7 @@ vueApp = new Vue({
             this.changeDialogTab(tabName);
             this.stats.stopTime = new Date();
             this.dialogShowed = true;
+            this.stopMouseTracking();
         },
         changeDialogTab: function (tabName) {
             this.statsTabVisible = false;
@@ -241,15 +256,18 @@ vueApp = new Vue({
             if (tabName === 'stats') {
                 this.statsTabVisible = true;
             } else if (tabName === 'mousemap') {
-                this.mousemapTabVisible = true;
+                this.mousemapTabVisible = true; // see 'updated' section
+                //this.drawMousemap();
             } else {
                 this.settingsTabVisible = true;
             }
         },
         hideDialog: function () {
             this.dialogShowed = false;
-            if (!this.gameStarted) {
+            if ( ! this.gameStarted) {
                 this.startGame();
+            } else {
+                this.restartMouseTracking();
             }
         },
         changeGridSize: function (event) {
@@ -294,6 +312,61 @@ vueApp = new Vue({
                     }
                 }
             }
-        }
+        },
+        startMouseTracking: function () {
+            this.mouseMoves.length = 0;
+            this.mouseTracking = true;
+        },
+        restartMouseTracking: function () {
+            this.mouseTracking = true;
+        },
+        stopMouseTracking: function () {
+            this.mouseTracking = false;
+        },
+        updateMouseMoves: function(event) {
+            if (this.mouseTracking) {
+                var nx = event.clientX / this.$el.clientWidth;  // normalize in [0, 1] interval
+                var ny = event.clientY / this.$el.clientHeight;
+                this.mouseMoves.push(new Point(nx, ny));
+            }
+        },
+        updateMouseClicks: function(event) {
+            if (this.mouseTracking) {
+                var nx = event.clientX / this.$el.clientWidth;  // normalize in [0, 1] interval
+                var ny = event.clientY / this.$el.clientHeight;
+                this.mouseClicks.push(new Point(nx, ny));
+            }
+        },
+        drawMousemap: function () {
+            var canvas = this.$refs['mousemap_canvas']; // if mousemapTab visible
+             if (canvas) {
+                var ctx = canvas.getContext('2d');
+                if (ctx) {
+                    // clear canvas
+                    var W = canvas.width;
+                    var H = canvas.height;
+                    ctx.fillStyle = 'white';
+                    ctx.clearRect(0, 0, W, H);
+
+                    this.drawMouseMoves(ctx, W, H);
+                }
+            }
+        },
+        drawMouseMoves: function (ctx, W,  H) {
+            if (ctx) {
+                ctx.beginPath();
+                ctx.strokeStyle = 'red';
+                for (var i = 0; i + 1 < this.mouseMoves.length; i ++) {
+                    var x0 = this.mouseMoves[i].x * W;
+                    var y0 = this.mouseMoves[i].y * H;
+                    var x1 = this.mouseMoves[i+1].x * W;
+                    var y1 = this.mouseMoves[i+1].y * H;
+                    ctx.moveTo(x0, y0);
+                    ctx.lineTo(x1, y1);
+                }
+                ctx.stroke();
+                ctx.closePath();
+            }
+        },
     }
 });

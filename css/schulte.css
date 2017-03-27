@@ -214,3 +214,8 @@ body {
 .display-none {
     display: none;
 }
+
+.mouse-map {
+    background: white;
+    border: 1px solid black;
+}

@@ -45,7 +45,7 @@
         <div class="w3-modal"
              :class="[dialogShowed ? 'display-block' : 'display-none']">
             <div class="w3-modal-content w3-card-4 w3-animate-zoom" style="min-width: 300px; max-width: 600px;">
-                <header class="w3-container w3-blue">
+                <header class="w3-container w3-blue w3-center">
                     <span @click="hideDialog"
                           class="w3-button w3-display-topright w3-xxlarge w3-blue w3-hover-blue w3-hover-text-black"
                           style="padding: 0 10px 0 0;"
@@ -65,6 +65,11 @@
                             @click="changeDialogTab('stats')"
                             :class="[statsTabVisible ? 'w3-indigo w3-text-white w3-hover-indigo' : 'w3-white w3-hover-white w3-hover-text-indigo']">
                         Stats
+                    </button>
+                    <button class="tablink w3-bar-item w3-button"
+                            @click="changeDialogTab('mousemap')"
+                            :class="[mousemapTabVisible ? 'w3-indigo w3-text-white w3-hover-indigo' : 'w3-white w3-hover-white w3-hover-text-indigo']">
+                        Mouse Map
                     </button>
                 </div>
 
@@ -132,6 +137,10 @@
                             <td>{{ stats.wrongClicks }}</td>
                         </tr>
                     </table>
+                </div>
+
+                <div class="w3-container w3-margin-top w3-center" v-if="mousemapTabVisible">
+                    <canvas class="mouse-map" width="300" height="300"></canvas>
                 </div>
 
                 <footer class="w3-container w3-light-grey w3-center">

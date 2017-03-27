@@ -39,6 +39,7 @@ var appData = {
     dialogShowed: false,
     settingsTabVisible: true,
     statsTabVisible: false,
+    mousemapTabVisible: false,
 
     stats: {
         startTime: new Date(),
@@ -235,9 +236,12 @@ vueApp = new Vue({
         changeDialogTab: function (tabName) {
             this.statsTabVisible = false;
             this.settingsTabVisible = false;
+            this.mousemapTabVisible = false;
 
-            if (tabName == 'stats') {
+            if (tabName === 'stats') {
                 this.statsTabVisible = true;
+            } else if (tabName === 'mousemap') {
+                this.mousemapTabVisible = true;
             } else {
                 this.settingsTabVisible = true;
             }

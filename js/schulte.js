@@ -355,17 +355,34 @@ vueApp = new Vue({
                     ctx.fillStyle = 'white';
                     ctx.clearRect(0, 0, W, H);
 
-                    this.drawMouseMoves(ctx, W, H);
-
-                    this.drawMouseClicks(ctx, W, H)
+                    this.drawMousemapGrid(ctx, W, H);
+                    this.drawMousemapMoves(ctx, W, H);
+                    this.drawMousemapClicks(ctx, W, H)
                 }
             }
         },
-        drawMouseMoves: function (ctx, W,  H) {
+        drawMousemapGrid: function (ctx, W,  H) {
+            if (ctx && this.gridSize > 0) {
+                var rowH = H / this.gridSize;
+                var colW = W / this.gridSize;
+                ctx.strokeStyle = '#ccc';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                for (var i = 1; i < this.gridSize; i ++) {
+                    ctx.moveTo(i*colW, 0);
+                    ctx.lineTo(i*colW, H);
+                    ctx.moveTo(0, i*rowH);
+                    ctx.lineTo(W, i*rowH);
+                }
+                ctx.stroke();
+                ctx.closePath();
+            }
+        },
+        drawMousemapMoves: function (ctx, W,  H) {
             if (ctx) {
                 ctx.beginPath();
-                ctx.strokeStyle = '#880000';
-                ctx.lineWidth = 1;
+                ctx.strokeStyle = '#6390f7'; //'#6390f7';
+                ctx.lineWidth = 2;
                 for (var i = 0; i + 1 < this.mouseMoves.length; i ++) {
                     var x0 = this.mouseMoves[i].x * W;
                     var y0 = this.mouseMoves[i].y * H;
@@ -378,20 +395,20 @@ vueApp = new Vue({
                 ctx.closePath();
             }
         },
-        drawMouseClicks: function (ctx, W,  H) {
+        drawMousemapClicks: function (ctx, W,  H) {
             if (ctx) {
-                ctx.lineWidth = 1;
+                ctx.lineWidth = 2;
                 var radius = 5;
                 for (var i = 0; i < this.mouseClicks.length; i ++) {
                     var centerX = this.mouseClicks[i].x * W;
                     var centerY = this.mouseClicks[i].y * H;
                     ctx.beginPath();
                     if (this.mouseClicks[i].correct) {
-                        ctx.fillStyle = '#008800';
-                        ctx.strokeStyle = '#00AA00';
+                        ctx.fillStyle = '#52a352';
+                        ctx.strokeStyle = '#6ac46a';
                     } else {
-                        ctx.fillStyle = '#880000';
-                        ctx.strokeStyle = '#AA0000';
+                        ctx.fillStyle = '#ba2a29';
+                        ctx.strokeStyle = '#f44f4d';
                     }
                     ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
                     ctx.fill();

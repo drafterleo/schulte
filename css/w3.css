@@ -134,7 +134,7 @@ input[type=checkbox].w3-check:disabled+.w3-validate,input[type=radio].w3-radio:d
 .w3-col.s10{width:83.33333%}
 .w3-col.s11{width:91.66666%}
 .w3-col.s12,.w3-half,.w3-third,.w3-twothird,.w3-threequarter,.w3-quarter{width:99.99999%}
-@media (min-width:601px){
+@media (min-width:501px){
 .w3-col.m1{width:8.33333%}
 .w3-col.m2{width:16.66666%}
 .w3-col.m3,.w3-quarter{width:24.99999%}

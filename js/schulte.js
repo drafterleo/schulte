@@ -10,11 +10,21 @@ function Cell(number) {
     };
 }
 
+function Point(x, y) {
+    this.x = x;
+    this.y = y;
+}
+
+function Click(x, y, correct) {
+    this.x = x;
+    this.y = y;
+    this.correct = correct;
+}
 
 var appData = {
     gridSize: 5,
     gridRange: [0, 1, 2, 3, 4],
-    cells: [], // array of Cell object
+    cells: [], // array of Cell
     trace: [],
     currNum: 1,
 
@@ -32,6 +42,10 @@ var appData = {
     turnSymbols: false,
     spinSymbols: false,
 
+    mouseTracking: false,
+    mouseMoves: [],   // array of Point
+    mouseClicks: [],  // array of Click
+
     rowHeight: '20%',
     colWidth: '20%',
     selectTimeOut: 500,
@@ -40,6 +54,7 @@ var appData = {
     dialogShowed: false,
     settingsTabVisible: true,
     statsTabVisible: false,
+    mousemapTabVisible: false,
 
     stats: {
         startTime: new Date(),
@@ -47,10 +62,10 @@ var appData = {
         correctClicks: 0,
         wrongClicks: 0,
         clear: function () {
-            this.startTime = new Date(),
-                this.stopTime = new Date(),
-                this.correctClicks = 0,
-                this.wrongClicks = 0
+            this.startTime = new Date();
+            this.stopTime = new Date();
+            this.correctClicks = 0;
+            this.wrongClicks = 0;
         },
         timeDiff: function () {
             var diff = (this.stopTime - this.startTime); // milliseconds between
@@ -89,6 +104,9 @@ vueApp = new Vue({
         this.execDialog('settings');
     },
     updated: function () {
+        if (this.dialogShowed && this.mousemapTabVisible) {
+            this.drawMousemap();
+        }
     },
     watch: {
         gridSize: function (val) {
@@ -100,7 +118,7 @@ vueApp = new Vue({
             this.rowHeight = 100 / val + '%';
             this.colWidth = 100 / val + '%';
 
-            this.startGame();
+            this.initGame();
         },
         spinSymbols: function (val) {
             this.updateSymbolSpins();
@@ -110,23 +128,8 @@ vueApp = new Vue({
         }
     },
     computed: {
-        clickedCell: {
-            get: function () {
-                return this.clickIndex;
-            },
-            set: function (cellIdx) {
-                if (this.gameStarted) {
-                    this.clickIndex = cellIdx;
-                    if (this.showClickResult) {
-                        this.showClickAnimation = true;
-                        clearTimeout(this.selectedTimerId);
-                        this.selectedTimerId = setTimeout(this.hideSelect, this.selectTimeOut);
-                    } else {
-                        this.showClickAnimation = false;
-                    }
-                    this.nextTurn();
-                }
-            }
+        clickedCell: function () {
+            return this.clickIndex;
         },
         hoveredCell: {
             get: function () {
@@ -140,35 +143,63 @@ vueApp = new Vue({
     },
     methods: {
         initGame: function () {
+            this.gameStarted = false;
             this.clearIndexes();
             this.currNum = 1;
             this.makeCells(this.gridSize * this.gridSize);
+            this.shuffleCells(1000);
             this.updateSymbolTurns();
             this.updateSymbolSpins();
             this.trace = [];
             this.stats.clear();
-            this.shuffleCells(1000);
-            //console.log('init game');
+            this.mouseMoves.length = 0;
+            this.mouseClicks.length = 0;
+            this.mouseTracking = false;
         },
         startGame: function () {
             this.initGame();
+            this.startMouseTracking();
             this.gameStarted = true;
-            //console.log('start game');
         },
         stopGame: function () {
             this.clearIndexes();
             clearTimeout(this.selectedTimerId);
             this.stats.stopTime = new Date();
             this.gameStarted = false;
+            this.stopMouseTracking();
         },
         clearIndexes: function () {
             this.hoverIndex = -1;
             this.clickIndex = -1;
             this.correctIndex = -1;
         },
+        setClickedCell: function (cellIdx, event) {
+            if (this.gameStarted) {
+                this.clickIndex = cellIdx;
+                if (this.showClickResult) {
+                    if (this.showClickAnimation) {
+                        clearTimeout(this.selectedTimerId);
+                    }
+                    this.showClickAnimation = true;
+                    this.selectedTimerId = setTimeout(this.hideSelect, this.selectTimeOut);
+                } else {
+                    this.showClickAnimation = false;
+                }
+
+                // append mouseClick
+                if (this.mouseTracking) {
+                    var nx = event.pageX / this.$el.clientWidth;  // normalize in [0, 1] interval
+                    var ny = event.pageY / this.$el.clientHeight;
+                    var correct = (this.cells[this.clickIndex].number === this.currNum);
+                    this.mouseClicks.push(new Click(nx, ny, correct));
+                }
+
+                this.nextTurn();
+            }
+        },
         nextTurn: function () {
-            if (this.clickedCell >= 0 && this.clickedCell < this.cells.length) {
-                if (this.cells[this.clickedCell].number === this.currNum) {      // correct answer
+            if (this.clickIndex >= 0 && this.clickIndex < this.cells.length) {
+                if (this.cells[this.clickIndex].number === this.currNum) {      // correct answer
                     this.stats.correctClicks ++;
                     if (this.shuffleSymbols) {
                         this.shuffleCells(1000);
@@ -179,7 +210,6 @@ vueApp = new Vue({
                     if (this.currNum > this.cells.length) {
                         this.stopGame();
                         this.execDialog('stats');
-                        //this.startGame();
                     }
                 } else {
                     this.stats.wrongClicks ++;
@@ -229,24 +259,31 @@ vueApp = new Vue({
             //console.log('showClickAnimation timeout');
         },
         execDialog: function (tabName) {
-            this.changeDialogTab(tabName)
+            this.changeDialogTab(tabName);
             this.stats.stopTime = new Date();
             this.dialogShowed = true;
+            this.stopMouseTracking();
         },
         changeDialogTab: function (tabName) {
             this.statsTabVisible = false;
             this.settingsTabVisible = false;
+            this.mousemapTabVisible = false;
 
-            if (tabName == 'stats') {
+            if (tabName === 'stats') {
                 this.statsTabVisible = true;
+            } else if (tabName === 'mousemap') {
+                this.mousemapTabVisible = true; // see 'updated' section
+                //this.drawMousemap();
             } else {
                 this.settingsTabVisible = true;
             }
         },
         hideDialog: function () {
             this.dialogShowed = false;
-            if (!this.gameStarted) {
+            if ( ! this.gameStarted) {
                 this.startGame();
+            } else {
+                this.restartMouseTracking();
             }
         },
         changeGridSize: function (event) {
@@ -291,7 +328,97 @@ vueApp = new Vue({
                     }
                 }
             }
-        }
+        },
+        startMouseTracking: function () {
+            this.mouseMoves.length = 0;
+            this.mouseClicks.length = 0;
+            this.mouseTracking = true;
+        },
+        restartMouseTracking: function () {
+            this.mouseTracking = true;
+        },
+        stopMouseTracking: function () {
+            this.mouseTracking = false;
+        },
+        appendMouseMove: function(event) {
+            if (this.mouseTracking) {
+                var nx = event.clientX / this.$el.clientWidth;  // normalize in [0, 1] interval
+                var ny = event.clientY / this.$el.clientHeight;
+                this.mouseMoves.push(new Point(nx, ny));
+            }
+        },
+        drawMousemap: function () {
+            var canvas = this.$refs['mousemap_canvas']; // if mousemapTab visible
+             if (canvas) {
+                var ctx = canvas.getContext('2d');
+                if (ctx) {
+                    // clear canvas
+                    var W = canvas.width;
+                    var H = canvas.height;
+                    ctx.fillStyle = 'white';
+                    ctx.clearRect(0, 0, W, H);
 
+                    this.drawMousemapGrid(ctx, W, H);
+                    this.drawMousemapMoves(ctx, W, H);
+                    this.drawMousemapClicks(ctx, W, H)
+                }
+            }
+        },
+        drawMousemapGrid: function (ctx, W,  H) {
+            if (ctx && this.gridSize > 0) {
+                var rowH = H / this.gridSize;
+                var colW = W / this.gridSize;
+                ctx.strokeStyle = '#ccc';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                for (var i = 1; i < this.gridSize; i ++) {
+                    ctx.moveTo(i*colW, 0);
+                    ctx.lineTo(i*colW, H);
+                    ctx.moveTo(0, i*rowH);
+                    ctx.lineTo(W, i*rowH);
+                }
+                ctx.stroke();
+                ctx.closePath();
+            }
+        },
+        drawMousemapMoves: function (ctx, W,  H) {
+            if (ctx) {
+                ctx.beginPath();
+                ctx.strokeStyle = '#1f6ef7'; //'#f78383';
+                ctx.lineWidth = 2;
+                for (var i = 0; i + 1 < this.mouseMoves.length; i ++) {
+                    var x0 = this.mouseMoves[i].x * W;
+                    var y0 = this.mouseMoves[i].y * H;
+                    var x1 = this.mouseMoves[i+1].x * W;
+                    var y1 = this.mouseMoves[i+1].y * H;
+                    ctx.moveTo(x0, y0);
+                    ctx.lineTo(x1, y1);
+                }
+                ctx.stroke();
+                ctx.closePath();
+            }
+        },
+        drawMousemapClicks: function (ctx, W,  H) {
+            if (ctx) {
+                ctx.lineWidth = 2;
+                var radius = 5;
+                for (var i = 0; i < this.mouseClicks.length; i ++) {
+                    var centerX = this.mouseClicks[i].x * W;
+                    var centerY = this.mouseClicks[i].y * H;
+                    ctx.beginPath();
+                    if (this.mouseClicks[i].correct) {
+                        ctx.fillStyle = '#52a352'; //'#6ac46a';
+                        ctx.strokeStyle = '#52a352';
+                    } else {
+                        ctx.fillStyle = '#ba2a29'; //'#f44f4d';
+                        ctx.strokeStyle = '#ba2a29';
+                    }
+                    ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+                    ctx.fill();
+                    ctx.stroke();
+                    ctx.closePath();
+                }
+            }
+        }
     }
 });

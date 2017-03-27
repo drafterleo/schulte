@@ -199,12 +199,15 @@ body {
     opacity: 1;
  }
 
-
 .grid-input {
     position: fixed;
     top: 0;
     left: 0;
     z-index: 1;
+}
+
+.hover-text-bold:hover {
+    font-weight: bold;
 }
 
 .display-block {
@@ -213,4 +216,9 @@ body {
 
 .display-none {
     display: none;
+}
+
+.mouse-map {
+    background: white;
+    border: 2px solid #ccc;
 }

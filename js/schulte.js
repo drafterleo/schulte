@@ -18,7 +18,7 @@ function Point(x, y) {
 function Click(x, y, correct) {
     this.x = x;
     this.y = y;
-    this.correct = true;
+    this.correct = correct;
 }
 
 var appData = {
@@ -171,7 +171,7 @@ vueApp = new Vue({
             this.clickIndex = -1;
             this.correctIndex = -1;
         },
-        setClickedCell: function (event, cellIdx) {
+        setClickedCell: function (cellIdx, event) {
             if (this.gameStarted) {
                 this.clickIndex = cellIdx;
                 if (this.showClickResult) {
@@ -381,20 +381,17 @@ vueApp = new Vue({
         drawMouseClicks: function (ctx, W,  H) {
             if (ctx) {
                 ctx.lineWidth = 1;
+                var radius = 5;
                 for (var i = 0; i < this.mouseClicks.length; i ++) {
                     var centerX = this.mouseClicks[i].x * W;
                     var centerY = this.mouseClicks[i].y * H;
-                    var radius;
                     ctx.beginPath();
                     if (this.mouseClicks[i].correct) {
-                        radius = 5;
                         ctx.fillStyle = '#008800';
                         ctx.strokeStyle = '#00AA00';
                     } else {
-                        radius = 7;
                         ctx.fillStyle = '#880000';
                         ctx.strokeStyle = '#AA0000';
-                        console.log("draw red");
                     }
                     ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
                     ctx.fill();

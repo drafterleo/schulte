@@ -210,7 +210,7 @@ vueApp = new Vue({
                     if (this.shuffleSymbols) {
                         this.shuffleCells(1000);
                     }
-                    this.correctIndex = this.indexOfCellByNumber(this.currNum);
+                    this.correctIndex = this.indexOfCorrectCell();
                     this.clickIndex = this.correctIndex;
 
                     if (! this.nextNum()) {
@@ -225,6 +225,16 @@ vueApp = new Vue({
         },
         isCellCorrect: function (cellIdx) {
             return this.cells[cellIdx].number === this.currNum;
+        },
+        indexOfCorrectCell: function () {
+            var index = -1;
+            for (var i = 0; i < this.cells.length; i++) {
+                if (this.isCellCorrect(i)) {
+                    index = i;
+                    break;
+                }
+            }
+            return index;
         },
         indexOfCellByNumber: function (number) {
             var index = -1;
@@ -308,7 +318,6 @@ vueApp = new Vue({
                 this.statsTabVisible = true;
             } else if (tabName === 'mousemap') {
                 this.mousemapTabVisible = true; // see 'updated' section
-                //this.drawMousemap();
             } else {
                 this.settingsTabVisible = true;
             }

@@ -26,8 +26,8 @@ function Click(x, y, correct) {
 
 var appData = {
     gridSize: 5,
-    gridRange: [0, 1, 2, 3, 4],
-    cells: [], // array of Cell
+    gridRange: [],
+    cells: [],      // array of Cell
 
     groupCount: 2,
     groupSizes: [], // setups in makeGridCells() method
@@ -121,7 +121,6 @@ vueApp = new Vue({
                 this.gridSize = 2; // recursion !!!
                 return;
             }
-            this.gridRange = this.makeRange(0, val - 1);
             this.rowHeight = 100 / val + '%';
             this.colWidth = 100 / val + '%';
 
@@ -274,6 +273,8 @@ vueApp = new Vue({
         makeGridCells: function () {
             var g, i;
             var cellCount = this.gridSize * this.gridSize;
+
+            this.gridRange = this.makeRange(0, this.gridSize - 1);
 
             this.groupSizes.length = 0;
             this.currNums.length = 0;

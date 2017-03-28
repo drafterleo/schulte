@@ -194,7 +194,7 @@ select::-ms-expand {
 .color-num {
     padding: 3px 10px;
     margin-right: 2px;
-    border: 2px solid #ccc;
+    border: 1px solid #ccc;
     font-size: 1.1em;
     font-weight: bold;
 }

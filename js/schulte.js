@@ -135,6 +135,9 @@ vueApp = new Vue({
         groupCount: function () {
             this.initGame()
         },
+        inverseCount: function () {
+            this.initGame()
+        },
         spinSymbols: function () {
             this.updateSymbolSpins();
         },
@@ -273,15 +276,15 @@ vueApp = new Vue({
         nextGroup: function () {
             this.currGroup = (this.currGroup + 1) % this.groupCount; // round it
         },
-        groupFirstNum: function (groupIdx) {
+        groupRange: function (groupIdx) {
             if (groupIdx >= 0 && groupIdx < this.groups.length) {
                 if (this.groups[groupIdx].inverted) {
-                    return this.groups[groupIdx].size;
+                    return this.groups[groupIdx].size + ':1';
                 } else {
-                    return 1;
+                    return '1:'+ this.groups[groupIdx].size;
                 }
             }
-            return 0;
+            return '?:?';
         },
         tracedCell: function (cellIdx) {
             return this.cells[cellIdx].traced;

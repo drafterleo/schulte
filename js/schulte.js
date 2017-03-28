@@ -212,8 +212,8 @@ vueApp = new Vue({
                     }
                     this.correctIndex = this.indexOfCellByNumber(this.currNum);
                     this.clickIndex = this.correctIndex;
-                    this.currNum++;
-                    if (this.currNum > this.cells.length) {
+
+                    if (! this.nextNum()) {
                         this.stopGame();
                         this.execDialog('stats');
                     }
@@ -235,6 +235,13 @@ vueApp = new Vue({
                 }
             }
             return index;
+        },
+        nextNum: function () {
+            this.currNum++;
+            if (this.currNum > this.cells.length) {
+                return false;
+            }
+            return true;
         },
         tracedCell: function (cellIdx) {
             return this.cells[cellIdx].number < this.currNum

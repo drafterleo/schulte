@@ -30,10 +30,9 @@ var appData = {
     cells: [], // array of Cell
 
     groupCount: 2,
-    groupSizes: [],
-    currGroup: 0,
-    currNum: 1,
-    currNums: [],
+    groupSizes: [], // setups in makeGridCells() method
+    currGroup: 0,   //
+    currNums: [],   //
     groupColorStyles: ['color: green', 'color: red', 'color: blue', 'color: magenta', 'color: brown'],
 
     gameStarted: false,
@@ -152,7 +151,6 @@ vueApp = new Vue({
         initGame: function () {
             this.gameStarted = false;
             this.clearIndexes();
-            this.currNum = 1;
             this.currGroup = 0;
             this.makeGridCells();
             this.shuffleCells(1000);

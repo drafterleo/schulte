@@ -29,7 +29,7 @@ var appData = {
     gridRange: [],
     cells: [],      // array of Cell
 
-    groupCount: 2,
+    groupCount: 1,
     groupSizes: [], // setups in makeGridCells() method
     currGroup: 0,   //
     currNums: [],   //
@@ -117,19 +117,18 @@ vueApp = new Vue({
     },
     watch: {
         gridSize: function (val) {
-            if (isNaN(parseInt(val)) || parseInt(val) < 2) {
-                this.gridSize = 2; // recursion !!!
-                return;
-            }
             this.rowHeight = 100 / val + '%';
             this.colWidth = 100 / val + '%';
 
             this.initGame();
         },
-        spinSymbols: function (val) {
+        groupCount: function () {
+            this.initGame()
+        },
+        spinSymbols: function () {
             this.updateSymbolSpins();
         },
-        turnSymbols: function (val) {
+        turnSymbols: function () {
             this.updateSymbolTurns();
         }
     },

@@ -8,7 +8,7 @@ function Cell(number) {
         'spin-right': false,
         'spin-left': false
     };
-    this.colorStyle = 'color: green';
+    this.colorStyle = 'color: black';
 }
 
 function Point(x, y) {
@@ -27,7 +27,13 @@ var appData = {
     gridRange: [0, 1, 2, 3, 4],
     cells: [], // array of Cell
     trace: [],
+
+    groupCount: 1,
+    groups: [],
+    currGroup: 0,
     currNum: 1,
+    currNums: [],
+    groupColorStyles: ['color: green', 'color: red', 'color: blue', 'color: magenta', 'color: brown'],
 
     gameStarted: false,
 

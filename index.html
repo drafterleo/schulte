@@ -111,9 +111,14 @@
                             </select>
                         </div>
                     </div>
-                    <div class="w3-row">
+
+                    <div class="w3-row" >
                         <div class="w3-col w3-half">
-                            <div class="w3-container w3-padding-0" style="margin-top: 10px;">
+                            <input class="w3-check" type="checkbox" v-model="inverseCount" style="margin-top: 5px;">
+                            <label class="w3-validate">Inverse Count </label>
+                        </div>
+                        <div class="w3-col w3-half">
+                            <div class="w3-container w3-padding-0" style="margin-top: 10px; width: 90%">
                                 <span class="color-num"
                                       v-if="groupCount == 1">{{ groupRange(0) }}</span>
                                 <span class="color-num"
@@ -126,10 +131,6 @@
                                       :style="groupColorStyles[2]"
                                       v-if="groupCount == 3">{{ groupRange(2) }}</span>
                             </div>
-                        </div>
-                        <div class="w3-col w3-third">
-                            <input class="w3-check" type="checkbox" v-model="inverseCount">
-                            <label class="w3-validate">Inverse Count </label>
                         </div>
                     </div>
 

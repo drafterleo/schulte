@@ -287,12 +287,12 @@ vueApp = new Vue({
         groupRange: function (groupIdx) {
             if (groupIdx >= 0 && groupIdx < this.groups.length) {
                 if (this.groups[groupIdx].inverted) {
-                    return this.groups[groupIdx].size + ':1';
+                    return this.groups[groupIdx].size + '..1';
                 } else {
-                    return '1:'+ this.groups[groupIdx].size;
+                    return '1..'+ this.groups[groupIdx].size;
                 }
             }
-            return '?:?';
+            return '?..?';
         },
         tracedCell: function (cellIdx) {
             return this.cells[cellIdx].traced;

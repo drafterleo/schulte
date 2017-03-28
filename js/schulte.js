@@ -29,7 +29,7 @@ var appData = {
     cells: [], // array of Cell
 
     groupCount: 1,
-    groups: [],
+    groupSizes: [],
     currGroup: 0,
     currNum: 1,
     currNums: [],
@@ -144,7 +144,6 @@ vueApp = new Vue({
             },
             set: function (cellIdx) {
                 this.hoverIndex = cellIdx;
-                //console.log('hoveredCell: ' + this.hoverIndex);
             }
         }
     },
@@ -253,7 +252,7 @@ vueApp = new Vue({
         nextNum: function () {
             this.nextGroup();
             var num = this.currNums[this.currGroup] + 1;
-            if (num > 0 || num < this.groups[this.currGroup]) {
+            if (num > 0 || num < this.groupSizes[this.currGroup]) {
                 this.currNums[this.currGroup] = num;
             } else {
                 this.nextGroup();
@@ -277,19 +276,19 @@ vueApp = new Vue({
             var g, i;
             var cellCount = this.gridSize * this.gridSize;
 
-            this.groups.length = 0;
+            this.groupSizes.length = 0;
             this.currNums.length = 0;
             var numsInGroup = Math.floor(cellCount / this.groupCount);
             for (g = 0; g < this.groupCount; g ++) {
-                this.groups.push(numsInGroup);
+                this.groupSizes.push(numsInGroup);
                 this.currNums.push(1);
             }
-            this.groups[0] += cellCount % this.groupCount;
+            this.groupSizes[0] += cellCount % this.groupCount;
 
             var range = [];
             var cell = null;
             for (g = 0; g < this.groupCount; g ++) {
-                for (i = 1; i <= this.groups[g]; i++) {
+                for (i = 1; i <= this.groupSizes[g]; i++) {
                     cell = new Cell(i);
                     if (this.groupCount > 1) {
                         cell.colorStyle = this.groupColorStyles[g];

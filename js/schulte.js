@@ -259,6 +259,13 @@ vueApp = new Vue({
         nextGroup: function () {
             this.currGroup = (this.currGroup + 1) % this.groupCount; // round
         },
+        groupFirstNum: function (groupIdx) {
+            if (groupIdx >= 0 && groupIdx < this.groupSizes.length) {
+                return 1;
+            } else {
+                return 0;
+            }
+        },
         tracedCell: function (cellIdx) {
             return this.cells[cellIdx].traced;
         },

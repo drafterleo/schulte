@@ -191,6 +191,13 @@ select::-ms-expand {
     background: #f4adad;
 }
 
+.color-num {
+    padding: 3px 10px;
+    margin-right: 2px;
+    border: 2px solid #ccc;
+    font-size: 1.1em;
+    font-weight: bold;
+}
 
 #settings-btn {
     position: fixed;

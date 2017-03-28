@@ -113,7 +113,20 @@
                     </div>
                     <div class="w3-row">
                         <div class="w3-col w3-half">
-                            <div class="w3-container"></div>
+                            <div class="w3-container w3-padding-0" style="margin-top: 10px;">
+                                First Num:
+                                <span class="color-num"
+                                      v-if="groupCount == 1">{{ groupFirstNum(0) }}</span>
+                                <span class="color-num"
+                                      :style="groupColorStyles[0]"
+                                      v-if="groupCount > 1">{{ groupFirstNum(0) }}</span>
+                                <span class="color-num"
+                                      :style="groupColorStyles[1]"
+                                      v-if="groupCount > 1">{{ groupFirstNum(1) }}</span>
+                                <span class="color-num"
+                                      :style="groupColorStyles[2]"
+                                      v-if="groupCount == 3">{{ groupFirstNum(2) }}</span>
+                            </div>
                         </div>
                         <div class="w3-col w3-third">
                             <input class="w3-check" type="checkbox" v-model="inverseCount">

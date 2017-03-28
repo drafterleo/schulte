@@ -197,8 +197,7 @@ vueApp = new Vue({
                 if (this.mouseTracking) {
                     var nx = event.pageX / this.$el.clientWidth;  // normalize in [0, 1] interval
                     var ny = event.pageY / this.$el.clientHeight;
-                    var correct = (this.cells[this.clickIndex].number === this.currNum);
-                    this.mouseClicks.push(new Click(nx, ny, correct));
+                    this.mouseClicks.push(new Click(nx, ny, this.isCellCorrect(this.clickIndex)));
                 }
 
                 this.nextTurn();
@@ -206,7 +205,7 @@ vueApp = new Vue({
         },
         nextTurn: function () {
             if (this.clickIndex >= 0 && this.clickIndex < this.cells.length) {
-                if (this.cells[this.clickIndex].number === this.currNum) {      // correct answer
+                if (this.isCellCorrect(this.clickIndex)) {
                     this.stats.correctClicks ++;
                     if (this.shuffleSymbols) {
                         this.shuffleCells(1000);
@@ -223,6 +222,9 @@ vueApp = new Vue({
                     this.correctIndex = -1;
                 }
             }
+        },
+        isCellCorrect: function (cellIdx) {
+            return this.cells[cellIdx].number === this.currNum;
         },
         indexOfCellByNumber: function (number) {
             var index = -1;

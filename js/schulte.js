@@ -153,6 +153,7 @@ vueApp = new Vue({
             this.gameStarted = false;
             this.clearIndexes();
             this.currNum = 1;
+            this.currGroup = 0;
             this.makeGridCells();
             this.shuffleCells(1000);
             this.updateSymbolTurns();
@@ -252,13 +253,11 @@ vueApp = new Vue({
             return index;
         },
         nextNum: function () {
-            this.nextGroup();
             var num = this.currNums[this.currGroup] + 1;
             if (num > 0 || num < this.groupSizes[this.currGroup]) {
                 this.currNums[this.currGroup] = num;
-            } else {
-                this.nextGroup();
             }
+            this.nextGroup();
         },
         nextGroup: function () {
             this.currGroup = (this.currGroup + 1) % this.groupCount; // round

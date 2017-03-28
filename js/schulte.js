@@ -13,6 +13,12 @@ function Cell(number) {
     this.colorStyle = 'color: black';
 }
 
+function Group (size) {
+    this.size = size;
+    this.currNum = 1;
+    this.inverted = false;
+}
+
 function Point(x, y) {
     this.x = x;
     this.y = y;
@@ -31,9 +37,12 @@ var appData = {
 
     groupCount: 1,
     inverseCount: false,
-    groupSizes: [], // setups in makeGridCells() method
-    currGroup: 0,   //
-    currNums: [],   //
+    currGroup: 0,
+    groups: [], // array of Group: setups in makeGridCells() method
+
+    //groupSizes: [],
+    //currNums: [],
+
     groupColorStyles: ['color: green', 'color: red', 'color: blue', 'color: magenta', 'color: brown'],
 
     gameStarted: false,
@@ -227,7 +236,7 @@ vueApp = new Vue({
         },
         isCellCorrect: function (cellIdx) {
             return (this.cells[cellIdx].group === this.currGroup) &&
-                   (this.cells[cellIdx].number === this.currNums[this.currGroup]);
+                   (this.cells[cellIdx].number === this.groups[this.currGroup].currNum);
         },
         indexOfCorrectCell: function () {
             var index = -1;
@@ -250,21 +259,29 @@ vueApp = new Vue({
             return index;
         },
         nextNum: function () {
-            var num = this.currNums[this.currGroup] + 1;
-            if (num > 0 || num < this.groupSizes[this.currGroup]) {
-                this.currNums[this.currGroup] = num;
+            var num;
+            if (this.groups[this.currGroup].inverted) {
+                num = this.groups[this.currGroup].currNum - 1;
+            } else {
+                num = this.groups[this.currGroup].currNum + 1;
+            }
+            if (num > 0 || num < this.groups[this.currGroup].size) {
+                this.groups[this.currGroup].currNum = num;
             }
             this.nextGroup();
         },
         nextGroup: function () {
-            this.currGroup = (this.currGroup + 1) % this.groupCount; // round
+            this.currGroup = (this.currGroup + 1) % this.groupCount; // round it
         },
         groupFirstNum: function (groupIdx) {
-            if (groupIdx >= 0 && groupIdx < this.groupSizes.length) {
-                return 1;
-            } else {
-                return 0;
+            if (groupIdx >= 0 && groupIdx < this.groups.length) {
+                if (this.groups[groupIdx].inverted) {
+                    return this.groups[groupIdx].size;
+                } else {
+                    return 1;
+                }
             }
+            return 0;
         },
         tracedCell: function (cellIdx) {
             return this.cells[cellIdx].traced;
@@ -279,23 +296,28 @@ vueApp = new Vue({
         },
         makeGridCells: function () {
             var g, i;
+            this.groups.length = 0;
             var cellCount = this.gridSize * this.gridSize;
-
             this.gridRange = this.makeRange(0, this.gridSize - 1);
-
-            this.groupSizes.length = 0;
-            this.currNums.length = 0;
             var numsInGroup = Math.floor(cellCount / this.groupCount);
             for (g = 0; g < this.groupCount; g ++) {
-                this.groupSizes.push(numsInGroup);
-                this.currNums.push(1);
+                this.groups.push(new Group(numsInGroup));
             }
-            this.groupSizes[0] += cellCount % this.groupCount;
+            this.groups[0].size += cellCount % this.groupCount;
+
+            if (this.inverseCount) {
+                for (g = 0; g < this.groupCount; g++) {
+                    if (g % 2 > 0 || this.groupCount === 1) {
+                        this.groups[g].inverted = true;
+                        this.groups[g].currNum = this.groups[g].size;
+                    }
+                }
+            }
 
             var range = [];
             var cell = null;
             for (g = 0; g < this.groupCount; g ++) {
-                for (i = 1; i <= this.groupSizes[g]; i++) {
+                for (i = 1; i <= this.groups[g].size; i++) {
                     cell = new Cell(i);
                     cell.group = g;
                     if (this.groupCount > 1) {

@@ -310,7 +310,6 @@ vueApp = new Vue({
         },
         hideSelect: function () {
             this.showClickAnimation = false;
-            //console.log('showClickAnimation timeout');
         },
         execDialog: function (tabName) {
             this.changeDialogTab(tabName);

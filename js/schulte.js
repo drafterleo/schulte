@@ -1,6 +1,7 @@
 function Cell(number) {
     this.number = number;
     this.symbol = number;
+    this.traced = false;
     this.cssClasses = {
         'rotate-90': false,
         'rotate-180': false,
@@ -26,7 +27,6 @@ var appData = {
     gridSize: 5,
     gridRange: [0, 1, 2, 3, 4],
     cells: [], // array of Cell
-    trace: [],
 
     groupCount: 1,
     groups: [],
@@ -157,7 +157,6 @@ vueApp = new Vue({
             this.shuffleCells(1000);
             this.updateSymbolTurns();
             this.updateSymbolSpins();
-            this.trace = [];
             this.stats.clear();
             this.mouseMoves.length = 0;
             this.mouseClicks.length = 0;
@@ -207,6 +206,7 @@ vueApp = new Vue({
             if (this.clickIndex >= 0 && this.clickIndex < this.cells.length) {
                 if (this.isCellCorrect(this.clickIndex)) {
                     this.stats.correctClicks ++;
+                    this.cells[this.clickIndex].traced = true;
                     if (this.shuffleSymbols) {
                         this.shuffleCells(1000);
                         this.correctIndex = this.indexOfCorrectCell();
@@ -215,9 +215,11 @@ vueApp = new Vue({
                         this.correctIndex = this.clickIndex;
                     }
 
-                    if (! this.nextNum()) {
+                    if (this.stats.correctClicks >= this.cells.length) {
                         this.stopGame();
                         this.execDialog('stats');
+                    } else {
+                        this.nextNum();
                     }
                 } else {
                     this.stats.wrongClicks ++;
@@ -226,7 +228,7 @@ vueApp = new Vue({
             }
         },
         isCellCorrect: function (cellIdx) {
-            return this.cells[cellIdx].number === this.currNum;
+            return this.cells[cellIdx].number === this.currNums[this.currGroup];
         },
         indexOfCorrectCell: function () {
             var index = -1;
@@ -249,14 +251,19 @@ vueApp = new Vue({
             return index;
         },
         nextNum: function () {
-            this.currNum++;
-            if (this.currNum > this.cells.length) {
-                return false;
+            this.nextGroup();
+            var num = this.currNums[this.currGroup] + 1;
+            if (num > 0 || num < this.groups[this.currGroup]) {
+                this.currNums[this.currGroup] = num;
+            } else {
+                this.nextGroup();
             }
-            return true;
+        },
+        nextGroup: function () {
+            this.currGroup = (this.currGroup + 1) % this.groupCount; // round
         },
         tracedCell: function (cellIdx) {
-            return this.cells[cellIdx].number < this.currNum
+            return this.cells[cellIdx].traced;
         },
         makeRange: function (begin, end) {
             //range = Array.from({length: val}, (v, k) => k);

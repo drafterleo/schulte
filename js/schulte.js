@@ -40,9 +40,6 @@ var appData = {
     currGroup: 0,
     groups: [], // array of Group: setups in makeGridCells() method
 
-    //groupSizes: [],
-    //currNums: [],
-
     groupColorStyles: ['color: green', 'color: red', 'color: blue', 'color: magenta', 'color: brown'],
 
     gameStarted: false,

@@ -127,12 +127,20 @@ vueApp = new Vue({
     },
     watch: {
         gridSize: function (val) {
+            if (typeof(val) === 'string') {
+                this.gridSize = parseInt(val); // recursion !!!
+                return;
+            }
             this.rowHeight = 100 / val + '%';
             this.colWidth = 100 / val + '%';
 
             this.initGame();
         },
-        groupCount: function () {
+        groupCount: function (val) {
+            if (typeof(val) === 'string') {
+                this.groupCount = parseInt(val); // recursion !!!
+                return;
+            }
             this.initGame()
         },
         inverseCount: function () {

@@ -30,6 +30,7 @@ var appData = {
     cells: [],      // array of Cell
 
     groupCount: 1,
+    inverseCount: false,
     groupSizes: [], // setups in makeGridCells() method
     currGroup: 0,   //
     currNums: [],   //

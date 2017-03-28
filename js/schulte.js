@@ -209,9 +209,11 @@ vueApp = new Vue({
                     this.stats.correctClicks ++;
                     if (this.shuffleSymbols) {
                         this.shuffleCells(1000);
+                        this.correctIndex = this.indexOfCorrectCell();
+                        this.clickIndex = this.correctIndex;
+                    } else {
+                        this.correctIndex = this.clickIndex;
                     }
-                    this.correctIndex = this.indexOfCorrectCell();
-                    this.clickIndex = this.correctIndex;
 
                     if (! this.nextNum()) {
                         this.stopGame();

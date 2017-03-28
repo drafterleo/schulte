@@ -32,7 +32,9 @@
                           'wrong-cell'  : showClickAnimation && (clickedCell == r*gridSize + c) && clickedCell != correctIndex,
                           'traced-cell' : showTrace && tracedCell(r*gridSize + c)
                           }">
-                <span :class="[cells[r*gridSize + c].cssClasses]" style="cursor: default;">
+                <span :class="[cells[r*gridSize + c].cssClasses]"
+                      :style="cells[r*gridSize + c].colorStyle"
+                      style="cursor: default;">
                     {{ cells[r*gridSize + c].number }}
                 </span>
             </div>

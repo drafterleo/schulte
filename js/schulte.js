@@ -8,6 +8,7 @@ function Cell(number) {
         'spin-right': false,
         'spin-left': false
     };
+    this.colorStyle = 'color: green';
 }
 
 function Point(x, y) {

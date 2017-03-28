@@ -153,7 +153,7 @@ vueApp = new Vue({
             this.gameStarted = false;
             this.clearIndexes();
             this.currNum = 1;
-            this.makeCells(this.gridSize * this.gridSize);
+            this.makeGridCells();
             this.shuffleCells(1000);
             this.updateSymbolTurns();
             this.updateSymbolSpins();
@@ -247,10 +247,29 @@ vueApp = new Vue({
             }
             return range;
         },
-        makeCells: function (n) {
+        makeGridCells: function () {
+            var g, i;
+            var cellCount = this.gridSize * this.gridSize;
+
+            this.groups.length = 0;
+            this.currNums.length = 0;
+            var numsInGroup = Math.floor(cellCount / this.groupCount);
+            for (g = 0; g < this.groupCount; g ++) {
+                this.groups.push(numsInGroup);
+                this.currNums.push(1);
+            }
+            this.groups[0] += cellCount % this.groupCount;
+
             var range = [];
-            for (var i = 1; i <= n; i++) {
-                range.push(new Cell(i));
+            var cell = null;
+            for (g = 0; g < this.groupCount; g ++) {
+                for (i = 1; i <= this.groups[g]; i++) {
+                    cell = new Cell(i);
+                    if (this.groupCount > 1) {
+                        cell.colorStyle = this.groupColorStyles[g];
+                    }
+                    range.push(cell);
+                }
             }
             this.cells = range;
         },

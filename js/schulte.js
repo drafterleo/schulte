@@ -1,6 +1,7 @@
 function Cell(number) {
     this.number = number;
     this.symbol = number;
+    this.group = 0;
     this.traced = false;
     this.cssClasses = {
         'rotate-90': false,
@@ -28,7 +29,7 @@ var appData = {
     gridRange: [0, 1, 2, 3, 4],
     cells: [], // array of Cell
 
-    groupCount: 1,
+    groupCount: 2,
     groupSizes: [],
     currGroup: 0,
     currNum: 1,
@@ -227,7 +228,8 @@ vueApp = new Vue({
             }
         },
         isCellCorrect: function (cellIdx) {
-            return this.cells[cellIdx].number === this.currNums[this.currGroup];
+            return (this.cells[cellIdx].group === this.currGroup) &&
+                   (this.cells[cellIdx].number === this.currNums[this.currGroup]);
         },
         indexOfCorrectCell: function () {
             var index = -1;
@@ -290,6 +292,7 @@ vueApp = new Vue({
             for (g = 0; g < this.groupCount; g ++) {
                 for (i = 1; i <= this.groupSizes[g]; i++) {
                     cell = new Cell(i);
+                    cell.group = g;
                     if (this.groupCount > 1) {
                         cell.colorStyle = this.groupColorStyles[g];
                     }

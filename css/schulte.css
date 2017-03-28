@@ -7,6 +7,18 @@ body {
     font-family: Arial, Helvetica, sans-serif;
 }
 
+select{
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding: 5px 25px 5px 5px;
+    background: url('../img/dr_down_16.png') no-repeat right;
+    background-position-x: calc(100% - 5px);
+}
+
+select::-ms-expand {
+    display: none;
+}
+
 .wrapper {
     width: 100vw;
     height: 100vh;
@@ -179,6 +191,13 @@ body {
     background: #f4adad;
 }
 
+.color-num {
+    padding: 3px 10px;
+    margin-right: 2px;
+    border: 1px solid #ccc;
+    font-size: 1.1em;
+    font-weight: bold;
+}
 
 #settings-btn {
     position: fixed;

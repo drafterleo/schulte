@@ -32,7 +32,9 @@
                           'wrong-cell'  : showClickAnimation && (clickedCell == r*gridSize + c) && clickedCell != correctIndex,
                           'traced-cell' : showTrace && tracedCell(r*gridSize + c)
                           }">
-                <span :class="[cells[r*gridSize + c].cssClasses]" style="cursor: default;">
+                <span :class="[cells[r*gridSize + c].cssClasses]"
+                      :style="cells[r*gridSize + c].colorStyle"
+                      style="cursor: default;">
                     {{ cells[r*gridSize + c].number }}
                 </span>
             </div>
@@ -76,12 +78,13 @@
 
                 <div class="w3-container w3-margin w3-padding-0" v-if="settingsTabVisible">
                     <div class="w3-row">
-                        <div class="w3-col w3-third">
+                        <div class="w3-col w3-half">
                             <label for="grid_size" class="w3-text-black w3-block">
                                 <b>Grid</b>
                             </label>
                             <select id="grid_size"
-                                    class="w3-select w3-border w3-padding-4"
+                                    class="w3-select w3-border w3-padding-small"
+                                    style="width: 70%"
                                     v-model="gridSize">
                                 <option value="2">2 x 2</option>
                                 <option value="3">3 x 3</option>
@@ -92,6 +95,42 @@
                                 <option value="8">8 x 8</option>
                                 <option value="9">9 x 9</option>
                             </select>
+                        </div>
+
+                        <div class="w3-col w3-half">
+                            <label for="groups" class="w3-text-black w3-block">
+                                <b>Groups</b>
+                            </label>
+                            <select id="groups"
+                                    class="w3-select w3-border w3-padding-small"
+                                    style="width: 70%"
+                                    v-model="groupCount">
+                                <option value="1">1 group</option>
+                                <option value="2">2 groups</option>
+                                <option value="3">3 groups</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="w3-row" >
+                        <div class="w3-col w3-half">
+                            <input class="w3-check" type="checkbox" v-model="inverseCount" style="margin-top: 5px;">
+                            <label class="w3-validate">Inverse Count </label>
+                        </div>
+                        <div class="w3-col w3-half">
+                            <div class="w3-container w3-padding-0" style="margin-top: 10px; width: 90%">
+                                <span class="color-num"
+                                      v-if="groupCount == 1">{{ groupRange(0) }}</span>
+                                <span class="color-num"
+                                      :style="groupColorStyles[0]"
+                                      v-if="groupCount > 1">{{ groupRange(0) }}</span>
+                                <span class="color-num"
+                                      :style="groupColorStyles[1]"
+                                      v-if="groupCount > 1">{{ groupRange(1) }}</span>
+                                <span class="color-num"
+                                      :style="groupColorStyles[2]"
+                                      v-if="groupCount == 3">{{ groupRange(2) }}</span>
+                            </div>
                         </div>
                     </div>
 

@@ -1,6 +1,8 @@
 function Cell(number) {
     this.number = number;
     this.symbol = number;
+    this.group = 0;
+    this.traced = false;
     this.cssClasses = {
         'rotate-90': false,
         'rotate-180': false,
@@ -8,6 +10,13 @@ function Cell(number) {
         'spin-right': false,
         'spin-left': false
     };
+    this.colorStyle = 'color: black';
+}
+
+function Group (size) {
+    this.size = size;
+    this.currNum = 1;
+    this.inverted = false;
 }
 
 function Point(x, y) {
@@ -23,10 +32,18 @@ function Click(x, y, correct) {
 
 var appData = {
     gridSize: 5,
-    gridRange: [0, 1, 2, 3, 4],
-    cells: [], // array of Cell
-    trace: [],
-    currNum: 1,
+    gridRange: [],
+    cells: [],      // array of Cell
+
+    groupCount: 1,
+    inverseCount: false,
+    currGroup: 0,
+    groups: [], // array of Group: setups in makeGridCells() method
+
+    //groupSizes: [],
+    //currNums: [],
+
+    groupColorStyles: ['color: green', 'color: red', 'color: blue', 'color: magenta', 'color: brown'],
 
     gameStarted: false,
 
@@ -110,20 +127,29 @@ vueApp = new Vue({
     },
     watch: {
         gridSize: function (val) {
-            if (isNaN(parseInt(val)) || parseInt(val) < 2) {
-                this.gridSize = 2; // recursion !!!
+            if (typeof(val) === 'string') {
+                this.gridSize = parseInt(val); // recursion !!!
                 return;
             }
-            this.gridRange = this.makeRange(0, val - 1);
             this.rowHeight = 100 / val + '%';
             this.colWidth = 100 / val + '%';
 
             this.initGame();
         },
-        spinSymbols: function (val) {
+        groupCount: function (val) {
+            if (typeof(val) === 'string') {
+                this.groupCount = parseInt(val); // recursion !!!
+                return;
+            }
+            this.initGame()
+        },
+        inverseCount: function () {
+            this.initGame()
+        },
+        spinSymbols: function () {
             this.updateSymbolSpins();
         },
-        turnSymbols: function (val) {
+        turnSymbols: function () {
             this.updateSymbolTurns();
         }
     },
@@ -137,7 +163,6 @@ vueApp = new Vue({
             },
             set: function (cellIdx) {
                 this.hoverIndex = cellIdx;
-                //console.log('hoveredCell: ' + this.hoverIndex);
             }
         }
     },
@@ -145,12 +170,11 @@ vueApp = new Vue({
         initGame: function () {
             this.gameStarted = false;
             this.clearIndexes();
-            this.currNum = 1;
-            this.makeCells(this.gridSize * this.gridSize);
+            this.currGroup = 0;
+            this.makeGridCells();
             this.shuffleCells(1000);
             this.updateSymbolTurns();
             this.updateSymbolSpins();
-            this.trace = [];
             this.stats.clear();
             this.mouseMoves.length = 0;
             this.mouseClicks.length = 0;
@@ -177,8 +201,10 @@ vueApp = new Vue({
             if (this.gameStarted) {
                 this.clickIndex = cellIdx;
                 if (this.showClickResult) {
+                    if (this.showClickAnimation) {
+                        clearTimeout(this.selectedTimerId);
+                    }
                     this.showClickAnimation = true;
-                    clearTimeout(this.selectedTimerId);
                     this.selectedTimerId = setTimeout(this.hideSelect, this.selectTimeOut);
                 } else {
                     this.showClickAnimation = false;
@@ -188,33 +214,50 @@ vueApp = new Vue({
                 if (this.mouseTracking) {
                     var nx = event.pageX / this.$el.clientWidth;  // normalize in [0, 1] interval
                     var ny = event.pageY / this.$el.clientHeight;
-                    var correct = (this.cells[this.clickIndex].number === this.currNum);
-                    this.mouseClicks.push(new Click(nx, ny, correct));
+                    this.mouseClicks.push(new Click(nx, ny, this.isCellCorrect(this.clickIndex)));
                 }
 
                 this.nextTurn();
             }
         },
         nextTurn: function () {
-            if (this.clickedCell >= 0 && this.clickedCell < this.cells.length) {
-                if (this.cells[this.clickedCell].number === this.currNum) {      // correct answer
+            if (this.clickIndex >= 0 && this.clickIndex < this.cells.length) {
+                if (this.isCellCorrect(this.clickIndex)) {
                     this.stats.correctClicks ++;
+                    this.cells[this.clickIndex].traced = true;
                     if (this.shuffleSymbols) {
                         this.shuffleCells(1000);
+                        this.correctIndex = this.indexOfCorrectCell();
+                        this.clickIndex = this.correctIndex;
+                    } else {
+                        this.correctIndex = this.clickIndex;
                     }
-                    this.correctIndex = this.indexOfCellByNumber(this.currNum);
-                    this.clickIndex = this.correctIndex;
-                    this.currNum++;
-                    if (this.currNum > this.cells.length) {
+
+                    if (this.stats.correctClicks >= this.cells.length) {
                         this.stopGame();
                         this.execDialog('stats');
-                        //this.startGame();
+                    } else {
+                        this.nextNum();
                     }
                 } else {
                     this.stats.wrongClicks ++;
                     this.correctIndex = -1;
                 }
             }
+        },
+        isCellCorrect: function (cellIdx) {
+            return (this.cells[cellIdx].group === this.currGroup) &&
+                   (this.cells[cellIdx].number === this.groups[this.currGroup].currNum);
+        },
+        indexOfCorrectCell: function () {
+            var index = -1;
+            for (var i = 0; i < this.cells.length; i++) {
+                if (this.isCellCorrect(i)) {
+                    index = i;
+                    break;
+                }
+            }
+            return index;
         },
         indexOfCellByNumber: function (number) {
             var index = -1;
@@ -226,8 +269,33 @@ vueApp = new Vue({
             }
             return index;
         },
+        nextNum: function () {
+            var num;
+            if (this.groups[this.currGroup].inverted) {
+                num = this.groups[this.currGroup].currNum - 1;
+            } else {
+                num = this.groups[this.currGroup].currNum + 1;
+            }
+            if (num > 0 || num < this.groups[this.currGroup].size) {
+                this.groups[this.currGroup].currNum = num;
+            }
+            this.nextGroup();
+        },
+        nextGroup: function () {
+            this.currGroup = (this.currGroup + 1) % this.groupCount; // round it
+        },
+        groupRange: function (groupIdx) {
+            if (groupIdx >= 0 && groupIdx < this.groups.length) {
+                if (this.groups[groupIdx].inverted) {
+                    return this.groups[groupIdx].size + '..1';
+                } else {
+                    return '1..'+ this.groups[groupIdx].size;
+                }
+            }
+            return '?..?';
+        },
         tracedCell: function (cellIdx) {
-            return this.cells[cellIdx].number < this.currNum
+            return this.cells[cellIdx].traced;
         },
         makeRange: function (begin, end) {
             //range = Array.from({length: val}, (v, k) => k);
@@ -237,10 +305,37 @@ vueApp = new Vue({
             }
             return range;
         },
-        makeCells: function (n) {
+        makeGridCells: function () {
+            var g, i;
+            this.groups.length = 0;
+            var cellCount = this.gridSize * this.gridSize;
+            this.gridRange = this.makeRange(0, this.gridSize - 1);
+            var numsInGroup = Math.floor(cellCount / this.groupCount);
+            for (g = 0; g < this.groupCount; g ++) {
+                this.groups.push(new Group(numsInGroup));
+            }
+            this.groups[0].size += cellCount % this.groupCount;
+
+            if (this.inverseCount) {
+                for (g = 0; g < this.groupCount; g++) {
+                    if (g % 2 > 0 || this.groupCount === 1) {
+                        this.groups[g].inverted = true;
+                        this.groups[g].currNum = this.groups[g].size;
+                    }
+                }
+            }
+
             var range = [];
-            for (var i = 1; i <= n; i++) {
-                range.push(new Cell(i));
+            var cell = null;
+            for (g = 0; g < this.groupCount; g ++) {
+                for (i = 1; i <= this.groups[g].size; i++) {
+                    cell = new Cell(i);
+                    cell.group = g;
+                    if (this.groupCount > 1) {
+                        cell.colorStyle = this.groupColorStyles[g];
+                    }
+                    range.push(cell);
+                }
             }
             this.cells = range;
         },
@@ -255,7 +350,6 @@ vueApp = new Vue({
         },
         hideSelect: function () {
             this.showClickAnimation = false;
-            //console.log('showClickAnimation timeout');
         },
         execDialog: function (tabName) {
             this.changeDialogTab(tabName);
@@ -272,7 +366,6 @@ vueApp = new Vue({
                 this.statsTabVisible = true;
             } else if (tabName === 'mousemap') {
                 this.mousemapTabVisible = true; // see 'updated' section
-                //this.drawMousemap();
             } else {
                 this.settingsTabVisible = true;
             }

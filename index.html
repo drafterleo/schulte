@@ -35,7 +35,7 @@
                 <span :class="[cells[r*gridSize + c].cssClasses]"
                       :style="cells[r*gridSize + c].colorStyle"
                       style="cursor: default;">
-                    {{ cells[r*gridSize + c].number }}
+                    {{ cells[r*gridSize + c].symbol }}
                 </span>
             </div>
         </div>
@@ -163,6 +163,9 @@
                             <p>
                                 <input class="w3-check" type="checkbox" v-model="spinSymbols">
                                 <label class="w3-validate">Spin Numbers</label> </p>
+                            <p>
+                                <input class="w3-check" type="checkbox" v-model="show69Dot">
+                                <label class="w3-validate">Show 69 Dot</label> </p>
                         </div>
                     </div>
                 </div>

@@ -53,6 +53,7 @@ var appData = {
     showClickAnimation: true,
     showTrace: true,
     showCenterDot: false,
+    show69Dot: false,
     shuffleSymbols: false,
     turnSymbols: false,
     spinSymbols: false,
@@ -149,6 +150,9 @@ vueApp = new Vue({
         },
         turnSymbols: function () {
             this.updateSymbolTurns();
+        },
+        show69Dot: function () {
+            this.update69Dots();
         }
     },
     computed: {
@@ -173,6 +177,7 @@ vueApp = new Vue({
             this.shuffleCells(1000);
             this.updateSymbolTurns();
             this.updateSymbolSpins();
+            this.update69Dots();
             this.stats.clear();
             this.mouseMoves.length = 0;
             this.mouseClicks.length = 0;
@@ -416,6 +421,19 @@ vueApp = new Vue({
                         default:
                             // no turn
                     }
+                }
+            }
+        },
+        update69Dots: function () {
+            var index6 = this.indexOfCellByNumber(6);
+            var index9 = this.indexOfCellByNumber(9);
+            if (index6 >= 0 && index9 >= 0) {
+                if (this.show69Dot) {
+                    this.cells[index6].symbol = '6.';
+                    this.cells[index9].symbol = '9.';
+                } else {
+                    this.cells[index6].symbol = '6';
+                    this.cells[index9].symbol = '9';
                 }
             }
         },

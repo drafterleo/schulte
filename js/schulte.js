@@ -52,7 +52,7 @@ var appData = {
     showClickResult: true,
     showClickAnimation: true,
     showTrace: true,
-    showCenterDot: true,
+    showCenterDot: false,
     shuffleSymbols: false,
     turnSymbols: false,
     spinSymbols: false,

@@ -425,15 +425,13 @@ vueApp = new Vue({
             }
         },
         update69Dots: function () {
-            var index6 = this.indexOfCellByNumber(6);
-            var index9 = this.indexOfCellByNumber(9);
-            if (index6 >= 0 && index9 >= 0) {
-                if (this.show69Dot) {
-                    this.cells[index6].symbol = '6.';
-                    this.cells[index9].symbol = '9.';
-                } else {
-                    this.cells[index6].symbol = '6';
-                    this.cells[index9].symbol = '9';
+            for (var i = 0; i < this.cells.length; i++) {
+                if (this.cells[i].number == 6 || this.cells[i].number == 9) {
+                    if (this.show69Dot) {
+                        this.cells[i].symbol = this.cells[i].number + '.';
+                    } else {
+                        this.cells[i].symbol = this.cells[i].number;
+                    }
                 }
             }
         },

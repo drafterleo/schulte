@@ -7,7 +7,7 @@ body {
     font-family: Arial, Helvetica, sans-serif;
 }
 
-select{
+select {
     -webkit-appearance: none;
     -moz-appearance: none;
     padding: 5px 25px 5px 5px;
@@ -240,4 +240,17 @@ select::-ms-expand {
 .mouse-map {
     background: white;
     border: 2px solid #ccc;
+}
+
+.center-dot {
+    position:absolute;
+    top:50%;
+    left:50%;
+    width: 10px;
+    height: 10px;
+    -ms-transform: translateX(-50%) translateY(-50%);
+    -webkit-transform: translate(-50%,-50%);
+    transform: translate(-50%,-50%);
+    pointer-events: none;
+    background: url('../img/green_dot.png');
 }

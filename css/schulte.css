@@ -203,20 +203,20 @@ select::-ms-expand {
     position: fixed;
     right: 0;
     top: 0;
+    width: 5vmin;
+    height: 5vmin;
     padding: 0;
-    background: transparent;
+    background: transparent url('../img/settings_48.png') no-repeat;
+    background-size: 5vmin 5vmin;
+    opacity: 0.10;
     border: none;
     outline-style: none;
-}
-
-#settings-btn img {
-    opacity: 0.10;
     transition: opacity 500ms;
 }
 
-#settings-btn img:hover {
+#settings-btn:hover {
     opacity: 1;
- }
+}
 
 .grid-input {
     position: fixed;

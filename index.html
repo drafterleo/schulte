@@ -42,10 +42,9 @@
 
         <div class="center-dot" v-if="showCenterDot"></div>
 
-        <button id="settings-btn"
+        <div id="settings-btn"
                 @click="execDialog('settings')">
-            <img src="img/settings_48.png" class="w3-opacity-max">
-        </button>
+        </div>
 
         <div class="w3-modal"
              :class="[dialogShowed ? 'display-block' : 'display-none']">

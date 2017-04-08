@@ -6,6 +6,9 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="css/w3.css">
     <link rel="stylesheet" href="css/schulte.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2196F3">
+    <link rel="icon" sizes="192x192" href="img/icon_192.png">
     <script src="js/vue.min.js"></script>
     <title>Schulte Table</title>
     <style>
@@ -203,7 +206,11 @@
             </div>
         </div>
     </div>
-
+    <script type="text/javascript">
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
+    </script>
     <script src="js/schulte.js"></script>
 </body>
 </html>

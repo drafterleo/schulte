@@ -93,6 +93,7 @@
                                 <option value="7">7 x 7</option>
                                 <option value="8">8 x 8</option>
                                 <option value="9">9 x 9</option>
+                                <option value="10">10 x 10</option>
                             </select>
                         </div>
 
@@ -107,6 +108,7 @@
                                 <option value="1">1 group</option>
                                 <option value="2">2 groups</option>
                                 <option value="3">3 groups</option>
+                                <option value="4">4 groups</option>
                             </select>
                         </div>
                     </div>
@@ -128,7 +130,10 @@
                                       v-if="groupCount > 1">{{ groupRange(1) }}</span>
                                 <span class="color-num"
                                       :style="groupColorStyles[2]"
-                                      v-if="groupCount == 3">{{ groupRange(2) }}</span>
+                                      v-if="groupCount > 2">{{ groupRange(2) }}</span>
+                                <span class="color-num"
+                                      :style="groupColorStyles[3]"
+                                      v-if="groupCount == 4">{{ groupRange(3) }}</span>
                             </div>
                         </div>
                     </div>

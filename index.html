@@ -140,6 +140,33 @@
 
                     <hr style="margin: 10px 0">
 
+                    <div class="w3-row" >
+                        <div class="w3-col w3-half">
+                            <input class="w3-check" type="checkbox" v-model="timerMode" style="margin-top: 5px;">
+                            <label class="w3-validate">Timer Mode </label>
+                        </div>
+                        <div class="w3-col w3-quarter" v-if="timerMode">
+                            <label for="minutes" class="w3-text">Minutes</label>
+                            <select id="minutes"
+                                    class="w3-select w3-border w3-padding-small"
+                                    style="width: 70%"
+                                    v-model="timerMinutes">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                                <option value="15">15</option>
+                                <option value="20">20</option>
+                                <option value="25">25</option>
+                                <option value="30">30</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <hr style="margin: 10px 0">
+
                     <div class="w3-row w3-margin-0">
                         <div class="w3-container w3-col w3-half w3-padding-0" style="min-width: 200px;">
                             <p>

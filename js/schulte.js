@@ -37,6 +37,8 @@ var appData = {
 
     groupCount: 1,
     inverseCount: false,
+    timerMode: false,
+    timerMinutes: 5,
     currGroup: 0,
     groups: [], // array of Group: setups in makeGridCells() method
 
@@ -66,6 +68,7 @@ var appData = {
     colWidth: '20%',
     selectTimeOut: 500,
     selectedTimerId: -1,
+    gameTimerId: -1,
 
     dialogShowed: false,
     settingsTabVisible: true,
@@ -185,6 +188,10 @@ vueApp = new Vue({
         },
         startGame: function () {
             this.initGame();
+            if (this.timerMode) {
+                clearTimeout(this.gameTimerId);
+                this.gameTimerId = setTimeout(this.gameTimerOut, this.timerMinutes * 60 * 1000);
+            }
             this.startMouseTracking();
             this.gameStarted = true;
         },
@@ -353,6 +360,10 @@ vueApp = new Vue({
         },
         hideSelect: function () {
             this.showClickAnimation = false;
+        },
+        gameTimerOut: function () {
+            this.stopGame();
+            this.execDialog('stats');
         },
         execDialog: function (tabName) {
             this.changeDialogTab(tabName);

@@ -363,6 +363,7 @@ vueApp = new Vue({
         },
         gameTimerOut: function () {
             this.stopGame();
+            clearTimeout(this.gameTimerId);
             this.execDialog('stats');
         },
         execDialog: function (tabName) {

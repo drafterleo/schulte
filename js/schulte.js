@@ -174,6 +174,13 @@ vueApp = new Vue({
     methods: {
         initGame: function () {
             this.gameStarted = false;
+            this.initTable();
+            this.stats.clear();
+            this.mouseMoves.length = 0;
+            this.mouseClicks.length = 0;
+            this.mouseTracking = false;
+        },
+        initTable: function () {
             this.clearIndexes();
             this.currGroup = 0;
             this.makeGridCells();
@@ -181,10 +188,6 @@ vueApp = new Vue({
             this.updateSymbolTurns();
             this.updateSymbolSpins();
             this.update69Dots();
-            this.stats.clear();
-            this.mouseMoves.length = 0;
-            this.mouseClicks.length = 0;
-            this.mouseTracking = false;
         },
         startGame: function () {
             this.initGame();
@@ -243,11 +246,19 @@ vueApp = new Vue({
                         this.correctIndex = this.clickIndex;
                     }
 
-                    if (this.stats.correctClicks >= this.cells.length) {
-                        this.stopGame();
-                        this.execDialog('stats');
+                    if (this.timerMode) {
+                        if (this.stats.correctClicks > 0 && this.stats.correctClicks % this.cells.length === 0) {
+                            this.initTable(); // jump to next table
+                        } else {
+                            this.nextNum();
+                        }
                     } else {
-                        this.nextNum();
+                        if (this.stats.correctClicks >= this.cells.length) {
+                            this.stopGame();
+                            this.execDialog('stats');
+                        } else {
+                            this.nextNum();
+                        }
                     }
                 } else {
                     this.stats.wrongClicks ++;

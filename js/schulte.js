@@ -17,6 +17,7 @@ function Group (size) {
     this.size = size;
     this.currNum = 1;
     this.inverted = false;
+    this.divergent = false;
 }
 
 function Point(x, y) {
@@ -37,6 +38,7 @@ var appData = {
 
     groupCount: 1,
     inverseCount: false,
+    divergentCount: false,
     timerMode: false,
     timerMinutes: 5,
     currGroup: 0,
@@ -292,10 +294,25 @@ vueApp = new Vue({
         },
         nextNum: function () {
             var num;
-            if (this.groups[this.currGroup].inverted) {
-                num = this.groups[this.currGroup].currNum - 1;
+            var currNum = this.groups[this.currGroup].currNum;
+
+            if (this.groups[this.currGroup].divergent) {
+                var h = Math.floor(this.groups[this.currGroup].size / 2);
+                var d = Math.abs(currNum - h);
+                if (currNum === h) {
+                    num = h + 1;
+                } else if (currNum < h) {
+                    num = h + 1 + d;
+                } else { // currNum > h
+                    d < h ? num = h - d : num = currNum + 1;
+                }
             } else {
-                num = this.groups[this.currGroup].currNum + 1;
+                // ordinal count
+                if (this.groups[this.currGroup].inverted) {
+                    num = currNum - 1;
+                } else {
+                    num = currNum + 1;
+                }
             }
             if (num > 0 || num < this.groups[this.currGroup].size) {
                 this.groups[this.currGroup].currNum = num;
@@ -334,6 +351,10 @@ vueApp = new Vue({
             var numsInGroup = Math.floor(cellCount / this.groupCount);
             for (g = 0; g < this.groupCount; g ++) {
                 this.groups.push(new Group(numsInGroup));
+                if (this.divergentCount) {
+                    this.groups[g].divergent = true;
+                    this.groups[g].currNum = Math.floor(this.groups[g].size / 2);
+                }
             }
             this.groups[0].size += cellCount % this.groupCount;
 

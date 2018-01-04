@@ -300,14 +300,25 @@ vueApp = new Vue({
             var currNum = this.groups[this.currGroup].currNum;
 
             if (this.groups[this.currGroup].divergent) {
-                var h = Math.floor(this.groups[this.currGroup].size / 2);
+                var grSize = this.groups[this.currGroup].size;
+                var h = Math.floor(grSize / 2);
                 var d = Math.abs(currNum - h);
-                if (currNum === h) {
-                    num = h + 1;
-                } else if (currNum < h) {
-                    num = h + 1 + d;
-                } else { // currNum > h
-                    d < h ? num = h - d : num = currNum + 1;
+                if (this.groups[this.currGroup].inverted) {
+                    if (currNum === h) {
+                        num = h + 1;
+                    } else if (currNum < h) {
+                        num = grSize - currNum;
+                    } else { // currNum > h
+                        num = 1 + (grSize - currNum);
+                    }
+                } else {
+                    if (currNum === h) {
+                        num = h + 1;
+                    } else if (currNum < h) {
+                        num = h + 1 + d;
+                    } else { // currNum > h
+                        d < h ? num = h - d : num = currNum + 1;
+                    }
                 }
             } else {
                 // ordinal count
@@ -329,7 +340,11 @@ vueApp = new Vue({
             if (groupIdx >= 0 && groupIdx < this.groups.length) {
                 if (this.groups[groupIdx].divergent) {
                     var h = Math.floor(this.groups[groupIdx].size / 2);
-                    return '&larr;' + h + ',' + (h + 1) + '&rarr;';
+                    if (this.groups[groupIdx].inverted) {
+                        return this.groups[groupIdx].size + '&rarr;' + '&larr;1';
+                    } else {
+                        return '&larr;' + h + ',' + (h + 1) + '&rarr;';
+                    }
                 } else {
                     if (this.groups[groupIdx].inverted) {
                         return this.groups[groupIdx].size + '&rarr;1';

@@ -341,9 +341,9 @@ vueApp = new Vue({
                 if (this.groups[groupIdx].divergent) {
                     var h = Math.floor(this.groups[groupIdx].size / 2);
                     if (this.groups[groupIdx].inverted) {
-                        return this.groups[groupIdx].size + '&rarr;' + '&larr;1';
+                        return this.groups[groupIdx].size + '&rarr;|' + '&larr;1';
                     } else {
-                        return '&larr;' + h + ',' + (h + 1) + '&rarr;';
+                        return '&larr;' + h + '|' + (h + 1) + '&rarr;';
                     }
                 } else {
                     if (this.groups[groupIdx].inverted) {

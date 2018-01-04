@@ -145,10 +145,13 @@ vueApp = new Vue({
                 this.groupCount = parseInt(val); // recursion !!!
                 return;
             }
-            this.initGame()
+            this.initGame();
         },
         inverseCount: function () {
-            this.initGame()
+            this.initGame();
+        },
+        divergentCount: function () {
+            this.initGame();
         },
         spinSymbols: function () {
             this.updateSymbolSpins();
@@ -324,10 +327,15 @@ vueApp = new Vue({
         },
         groupRange: function (groupIdx) {
             if (groupIdx >= 0 && groupIdx < this.groups.length) {
-                if (this.groups[groupIdx].inverted) {
-                    return this.groups[groupIdx].size + '..1';
+                if (this.groups[groupIdx].divergent) {
+                    var h = Math.floor(this.groups[groupIdx].size / 2);
+                    return '&larr;' + h + ',' + (h + 1) + '&rarr;';
                 } else {
-                    return '1..'+ this.groups[groupIdx].size;
+                    if (this.groups[groupIdx].inverted) {
+                        return this.groups[groupIdx].size + '&rarr;1';
+                    } else {
+                        return '1&rarr;'+ this.groups[groupIdx].size;
+                    }
                 }
             }
             return '?..?';

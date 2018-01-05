@@ -31,6 +31,15 @@ function Click(x, y, correct) {
     this.correct = correct;
 }
 
+function ClickStats(groupN, number, time, err, inverse, divergent) {
+    this.gorupN = groupN;
+    this.number = number;
+    this.time = time;
+    this.err = err;
+    this.inverse = inverse;
+    this.divergent = divergent;
+}
+
 var appData = {
     gridSize: 5,
     gridRange: [],
@@ -82,11 +91,18 @@ var appData = {
         stopTime: new Date(),
         correctClicks: 0,
         wrongClicks: 0,
+        clicks: [], // array of ClickStats
         clear: function () {
             this.startTime = new Date();
             this.stopTime = new Date();
             this.correctClicks = 0;
             this.wrongClicks = 0;
+            this.clicks = [];
+        },
+        addClick: function (groupN, number, err, inverse, divergent) {
+            var currDate = new Date();
+            var time = ((currDate - this.startTime) / 1000).toFixed(2);
+            this.clicks.push(new ClickStats(groupN, number, time, err, inverse, divergent));
         },
         timeDiff: function () {
             var diff = (this.stopTime - this.startTime); // milliseconds between
@@ -242,6 +258,7 @@ vueApp = new Vue({
             if (this.clickIndex >= 0 && this.clickIndex < this.cells.length) {
                 if (this.isCellCorrect(this.clickIndex)) {
                     this.stats.correctClicks ++;
+                    this.stats.addClick(this.currGroup, this.cells[this.clickIndex].number, false, this.groups[this.currGroup].inverted, this.groups[this.currGroup].divergent);
                     this.cells[this.clickIndex].traced = true;
                     if (this.shuffleSymbols) {
                         this.shuffleCells(1000);
@@ -267,6 +284,7 @@ vueApp = new Vue({
                     }
                 } else {
                     this.stats.wrongClicks ++;
+                    this.stats.addClick(this.currGroup, this.cells[this.clickIndex].number, true, this.groups[this.currGroup].inverted, this.groups[this.currGroup].divergent);
                     this.correctIndex = -1;
                 }
             }

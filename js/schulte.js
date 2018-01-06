@@ -32,7 +32,7 @@ function Click(x, y, correct) {
 }
 
 function ClickStats(groupN, number, time, err, inverse, divergent) {
-    this.gorupN = groupN;
+    this.groupN = groupN;
     this.number = number;
     this.time = time;
     this.err = err;
@@ -89,20 +89,23 @@ var appData = {
     stats: {
         startTime: new Date(),
         stopTime: new Date(),
+        lastTime: new Date(),
         correctClicks: 0,
         wrongClicks: 0,
         clicks: [], // array of ClickStats
         clear: function () {
             this.startTime = new Date();
             this.stopTime = new Date();
+            this.lastTime = new Date();
             this.correctClicks = 0;
             this.wrongClicks = 0;
             this.clicks = [];
         },
         addClick: function (groupN, number, err, inverse, divergent) {
-            var currDate = new Date();
-            var time = ((currDate - this.startTime) / 1000).toFixed(2);
+            var currTime = new Date();
+            var time = ((currTime - this.lastTime) / 1000).toFixed(2);
             this.clicks.push(new ClickStats(groupN, number, time, err, inverse, divergent));
+            this.lastTime = currTime;
         },
         timeDiff: function () {
             var diff = (this.stopTime - this.startTime); // milliseconds between

@@ -48,6 +48,7 @@ var appData = {
     groupCount: 1,
     inverseCount: false,
     divergentCount: false,
+    variousCounts: false,
     timerMode: false,
     timerMinutes: 5,
     currGroup: 0,
@@ -170,6 +171,9 @@ vueApp = new Vue({
             this.initGame();
         },
         divergentCount: function () {
+            this.initGame();
+        },
+        variousCounts: function () {
             this.initGame();
         },
         spinSymbols: function () {
@@ -325,12 +329,10 @@ vueApp = new Vue({
                 var h = Math.floor(grSize / 2);
                 var d = Math.abs(currNum - h);
                 if (this.groups[this.currGroup].inverted) {
-                    if (currNum === h) {
-                        num = h + 1;
-                    } else if (currNum < h) {
-                        num = grSize - currNum;
+                    if (currNum <= h) {
+                        num = grSize - currNum + 1;
                     } else { // currNum > h
-                        num = 1 + (grSize - currNum);
+                        num = 2 + (grSize - currNum);
                     }
                 } else {
                     if (currNum === h) {
@@ -362,7 +364,7 @@ vueApp = new Vue({
                 if (this.groups[groupIdx].divergent) {
                     var h = Math.floor(this.groups[groupIdx].size / 2);
                     if (this.groups[groupIdx].inverted) {
-                        return this.groups[groupIdx].size + '&rarr;|' + '&larr;1';
+                        return '1&rarr;|' + '&larr;' +  this.groups[groupIdx].size;
                     } else {
                         return '&larr;' + h + '|' + (h + 1) + '&rarr;';
                     }
@@ -395,18 +397,51 @@ vueApp = new Vue({
             var numsInGroup = Math.floor(cellCount / this.groupCount);
             for (g = 0; g < this.groupCount; g ++) {
                 this.groups.push(new Group(numsInGroup));
-                if (this.divergentCount) {
-                    this.groups[g].divergent = true;
-                    this.groups[g].currNum = Math.floor(this.groups[g].size / 2);
-                }
             }
             this.groups[0].size += cellCount % this.groupCount;
 
-            if (this.inverseCount) {
+            if (this.variousCounts) {
+                var various = [ {divergent: false, inverted: false, num: 'first'},
+                                {divergent: false, inverted: true,  num: 'last'},
+                                {divergent: true,  inverted: false, num: 'middle'},
+                                {divergent: true,  inverted: true,  num: 'first'}
+                ];
                 for (g = 0; g < this.groupCount; g++) {
-                    if (g % 2 > 0 || this.groupCount === 1) {
-                        this.groups[g].inverted = true;
-                        this.groups[g].currNum = this.groups[g].size;
+                    this.groups[g].inverted = various[g].inverted;
+                    this.groups[g].divergent = various[g].divergent;
+                    switch (various[g].num) {
+                        case 'last':
+                            this.groups[g].currNum = this.groups[g].size;
+                            break;
+                        case 'middle':
+                            this.groups[g].currNum = Math.floor(this.groups[g].size / 2);
+                            break;
+                        case 'first':
+                            this.groups[g].currNum = 1;
+                            break;
+                        default:
+                            this.groups[g].currNum = 1;
+                    }
+
+                }
+            } else {
+                for (g = 0; g < this.groupCount; g++) {
+                    if (this.divergentCount) {
+                        this.groups[g].divergent = true;
+                        this.groups[g].currNum = Math.floor(this.groups[g].size / 2);
+                    }
+                }
+
+                if (this.inverseCount) {
+                    for (g = 0; g < this.groupCount; g++) {
+                        if (g % 2 > 0 || this.groupCount === 1) {
+                            this.groups[g].inverted = true;
+                            if (this.groups[g].divergent) {
+                                this.groups[g].currNum = 1;
+                            } else {
+                                this.groups[g].currNum = this.groups[g].size;
+                            }
+                        }
                     }
                 }
             }

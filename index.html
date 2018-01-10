@@ -115,32 +115,36 @@
 
                     <div class="w3-row" >
                         <div class="w3-col w3-half">
-                            <input class="w3-check" type="checkbox" v-model="inverseCount" style="margin-top: 5px;">
+                            <input class="w3-check" type="checkbox" v-model="inverseCount" :disabled="variousCounts" style="margin-top: 5px;">
                             <label class="w3-validate">Inverse Count </label>
                             <br>
-                            <input class="w3-check" type="checkbox" v-model="divergentCount" style="margin-top: 5px;">
+                            <input class="w3-check" type="checkbox" v-model="divergentCount" :disabled="variousCounts" style="margin-top: 5px;">
                             <label class="w3-validate">Divergent Count </label>
+                            <br>
+                            <input class="w3-check" type="checkbox" v-model="variousCounts" style="margin-top: 5px;">
+                            <label class="w3-validate">Various Counts </label>
                         </div>
                         <div class="w3-col w3-half">
-                            <div class="w3-container w3-padding-0" style="margin-top: 10px; width: 90%">
-                                <span class="color-num"
-                                      v-if="groupCount == 1" v-html="groupRange(0)"></span>
-                                <span class="color-num"
+                            <div class="w3-container w3-padding-0" style="margin-top: 10px; width: 90%; float: left;">
+                                <div class="color-num"
+                                      v-if="groupCount == 1"
+                                      v-html="groupRange(0)"></div>
+                                <div class="color-num"
                                       :style="groupColorStyles[0]"
                                       v-if="groupCount > 1"
-                                      v-html="groupRange(0)"></span>
-                                <span class="color-num"
+                                      v-html="groupRange(0)"></div>
+                                <div class="color-num"
                                       :style="groupColorStyles[1]"
                                       v-if="groupCount > 1"
-                                      v-html="groupRange(1)"></span>
-                                <span class="color-num"
+                                      v-html="groupRange(1)"></div>
+                                <div class="color-num"
                                       :style="groupColorStyles[2]"
                                       v-if="groupCount > 2"
-                                      v-html="groupRange(2)"></span>
-                                <span class="color-num"
+                                      v-html="groupRange(2)"></div>
+                                <div class="color-num"
                                       :style="groupColorStyles[3]"
                                       v-if="groupCount == 4"
-                                      v-html="groupRange(3)"></span>
+                                      v-html="groupRange(3)"></div>
                             </div>
                         </div>
                     </div>
